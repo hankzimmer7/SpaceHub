@@ -39,7 +39,7 @@ var visiblePlanets = {
     year2019: {
         // visibility counter for each month + planet
         january: ["null", "morning", "evening", "morning", "null", "evening", "evening"],
-        ferbruary: ["dusk", "morning", "evening", "morning", "morning", "evening", "dusk"],
+        february: ["dusk", "morning", "evening", "morning", "morning", "evening", "dusk"],
         march: ["null", "morning", "evening", "morning", "morning", "evening", "null"],
         april: ["dawn", "morning", "evening", "morning", "morning", "null", "morning"],
         may: ["null", "dawn", "evening", "morning", "morning", "dawn", "morning"],
