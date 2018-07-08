@@ -44,8 +44,6 @@ $(document).on("click", "#search-button", function () {
 // $("button").on("click", function () {
     event.preventDefault();
     inputLocation = $("#viewing-location").val();
-    console.log($("#viewing-location").val());
-    console.log("inpLoc is " + inputLocation);
     if (locationIsValid(inputLocation) == true) {
         currentWeather(inputLocation);
         chanceOfClearSky(inputLocation);
