@@ -1,9 +1,56 @@
 body {
-    background: black;
+    background-image: url("../images/galaxy-background.jpg");
 }
-h1 {
-    color: white;
+
+h1, p {
+    color: rgb(50, 60, 60);
 }
-p {
-    color: white;
+
+.navbar {
+    background-color: black;
+}
+
+.jumbotron {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+/* --------Responsive Styling------------------------------------------- */
+
+/* Large devices (desktops, less than 1200px) */
+
+@media screen and (max-width: 1199.98px) {}
+
+/* Medium devices (tablets, less than 992px) */
+
+@media screen and (max-width: 991.98px) {
+    .display-4 {
+        font-size: 3rem;
+    }
+}
+
+/* Small devices (landscape phones, less than 768px) */
+
+@media screen and (max-width: 767.98px) {
+    .display-4 {
+        font-size: 2.5rem;
+    }
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+
+@media screen and (max-width: 575.98px) {
+    .display-4 {
+        font-size: 2rem;
+    }
+}
+
+/* Tiny devices */
+
+@media screen and (max-width: 420px) {
+    .display-4 {
+        font-size: 1.2rem;
+    }
+    p, label, .btn, .form-control {
+        font-size: .75rem;
+    }
 }
