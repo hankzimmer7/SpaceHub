@@ -12,8 +12,9 @@ function currentWeather(viewingLocation) { //for the current time
     })// We store all of the retrieved data inside of an object called "response"
         .then(function (response) {
             var cloudyOrNot = response.weather[0];
-            $("#weather").append("Current weather (main) is " + cloudyOrNot.main + "<br>");
-            $("#weather").append("Its description) is " + cloudyOrNot.description + "<br>")
+            var currentWeather = $("#current-weather");
+            currentWeather.append("Current weather: " + cloudyOrNot.main);
+            currentWeather.append(", or " + cloudyOrNot.description + "<br>")
         }); //end ajax function
 } // end current weather function
 
@@ -24,10 +25,14 @@ function chanceOfClearSky(viewingLocation) { // queries forecast not current wea
         method: "GET"
     })
         .then(function (response) { //report every *4th* of the 40 weather predictions, each 3h apart, 
+            var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
             for (i = 0; i < 10; i++) {
                 var weatherPeriod = i * 4;
                 var list = response.list[weatherPeriod];
-                $("#weather").append(list.dt_txt + " " + list.weather[0].description + "<br>");
+                var fW = $("#forecast-weather");
+                var forecastDate = new Date(list.dt * 1000); //convert unix to JS
+                fW.append(daysOfWeek[forecastDate.getDay()]); //append the day of the week
+                fW.append(": " + list.weather[0].description + "<br>"); //append that day's weather
             }
         }); //end ajax call
 } // end chanceOfClearSky function
