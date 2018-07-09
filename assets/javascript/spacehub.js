@@ -12,6 +12,8 @@ var reverseGeoUrl;
 var geoApiKey = "vIThotHxCdFMxbA7OSxbY4kmK0bOGSBg";
 var weatherApiKey = "166a433c57516f51dfab1f7edaed8413";
 
+//Variable for slides
+var slideIndex = 0;
 
 $(document).ready(function () {
     getLocation();
@@ -43,14 +45,13 @@ $(document).ready(function () {
 
 
     })
-    
+    //Display the planet slideshow
+    showSlides();
     visiblePlanets.displayVisibility();
 
 });
 
 
-
-//--------Create Functions here--------------------------------------------------------
 
 //Default Funtion to retrieve the user's location when page loaded
 function getLocation() {
@@ -101,6 +102,20 @@ function convertToLatLng(){
 
 
 
+//Function for cycling through planet display slides
+function showSlides() {
+    var i;
+    var slides = document.getElementsByClassName("space-slide");
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+    }
+    slideIndex++;
+    if (slideIndex > slides.length) {
+        slideIndex = 1
+    }
+    slides[slideIndex - 1].style.display = "block";
+    setTimeout(showSlides, 3000);
+}
 
 
 function currentWeather(viewingLocation) { //for the current time
@@ -234,5 +249,3 @@ var visiblePlanets = {
         }
     }
 }
-
-
