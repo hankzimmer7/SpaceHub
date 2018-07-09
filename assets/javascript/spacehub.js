@@ -90,17 +90,18 @@ var visiblePlanets = {
 
 //-------Once the page loads, execute these functions----------------------------------
 $(document).ready(function () {
-
+showSlides();
     // {
     //     alert("The javascript file is linked!");
     // }
 
 
 });
+ visiblePlanets.displayVisibility();
 
 
 var slideIndex = 0;
-showSlides();
+
 
 function showSlides() {
     var i;
@@ -114,6 +115,4 @@ function showSlides() {
     setTimeout(showSlides, 3000);
 }
 
-    visiblePlanets.displayVisibility();
-});
-
+   
