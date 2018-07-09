@@ -1,9 +1,39 @@
 //--------Declare global VARIABLES here-------------------------------------------------
-// This is our API key from the ajax Bujumbura exercise
+
+// This is our weather API key from the ajax Bujumbura exercise
 var APIKey = "166a433c57516f51dfab1f7edaed8413";
+
+//Variable for slides
+var slideIndex = 0;
+
+//Variables for diplaying planet visiblity data
+// get date
+var d = new Date();
+// store year
+var year = d.getFullYear();
+// store month
+var month = d.getMonth();
+// month names
+var monthNames = ["january", "february", "march", "april", "may", "june",
+    "july", "august", "september", "october", "november", "december"
+];
 
 //--------Create FUNCTIONS here--------------------------------------------------------
 
+//Function for cycling through planet display slides
+function showSlides() {
+    var i;
+    var slides = document.getElementsByClassName("space-slide");
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+    }
+    slideIndex++;
+    if (slideIndex > slides.length) {
+        slideIndex = 1
+    }
+    slides[slideIndex - 1].style.display = "block";
+    setTimeout(showSlides, 3000);
+}
 
 function currentWeather(viewingLocation) { //for the current time
     // TBD programmatically. Set the location that will be used in the function calls
@@ -16,8 +46,18 @@ function currentWeather(viewingLocation) { //for the current time
             var cloudyOrNot = response.weather[0];
             var currentWeather = $("#current-weather");
             currentWeather.empty();
-            currentWeather.append("Current weather: " + cloudyOrNot.main);
-            currentWeather.append(", or " + cloudyOrNot.description + "<br>")
+
+            //Create a paragraph to store the current weather statement
+            var weatherParagraph = $("<p>");
+
+            //The weather text contains the current weather
+            var weatherText = "Current weather: " + cloudyOrNot.main+ ", or " + cloudyOrNot.description;
+
+            //Add the weather text to the paragraph
+            weatherParagraph.text(weatherText);
+
+            //Append the weather statement to the current weather section of the page
+            currentWeather.append(weatherParagraph);
         }); //end ajax function
 } // end current weather function
 
@@ -29,32 +69,31 @@ function chanceOfClearSky(viewingLocation) { // queries forecast not current wea
         })
         .then(function (response) { //report every *4th* of the 40 weather predictions, each 3h apart, 
             var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-            var fW = $("#forecast-weather");
-            $("#forecast-weather").empty();
+            var fw = $("#forecast-weather");
+            fw.empty();
             for (i = 0; i < 10; i++) {
                 var weatherPeriod = i * 4;
                 var list = response.list[weatherPeriod];
-                var fW = $("#forecast-weather");
                 var forecastDate = new Date(list.dt * 1000); //convert unix to JS.
                 // From the API doc https://openweathermap.org/forecast5#JSON, 
                 // list.dt returns the ***Time of data forecasted, unix, UTC***
-                fW.append(daysOfWeek[forecastDate.getDay()] + " "); //append the day of the week
-                fW.append(list.dt_txt.substring(11) + " UTC");
-                fW.append(": " + list.weather[0].description + "<br>"); //append that day's weather
+
+                //Create a paragraph to store the forecast statement
+                var forecastParagraph = $("<p>");
+
+                //The forecast text contains the day of the week and that day's weather
+                var forecastText = daysOfWeek[forecastDate.getDay()] + " " + list.dt_txt.substring(11) + " UTC: " + list.weather[0].description;
+
+                //Add the forecast text to the paragraph
+                forecastParagraph.text(forecastText);
+
+                //Append the forecast statement to the forecast weather section of the page
+                fw.append(forecastParagraph);
             }
         }); //end ajax call
 } // end chanceOfClearSky function
-// get date
-var d = new Date();
-// store year
-var year = d.getFullYear();
-// store month
-var month = d.getMonth();
-// month names
-var monthNames = ["january", "february", "march", "april", "may", "june",
-    "july", "august", "september", "october", "november", "december"
-];
 
+//Function to check if the location the user entered is valid
 function locationIsValid(inputLocation) {
     if (inputLocation != null) {
         //we can test better than this
@@ -69,7 +108,7 @@ function locationIsValid(inputLocation) {
 // create an object called visiblePlanets to hold the planet visibility data and methods for determining active visible planets
 var visiblePlanets = {
     // assign a number to each planet
-    planetsString: ["mercury", "venus", "mars", "jupiter", "saturn", "uranus", "neptune"],
+    planetsString: ["Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"],
     planetsNumber: [0, 1, 2, 3, 4, 5, 6],
     // need an object for years
     year2018: {
@@ -111,8 +150,19 @@ var visiblePlanets = {
             for (i = 0; i < this.planetsString.length; i++) {
                 // check the planet visibility status
                 if (this.year2018[monthName][i] !== "null") {
-                    // display visibility stats in html div
-                    $("#visibility").append(this.planetsString[i] + " will be visbile " + this.year2018[monthName][i] + "<br>");
+
+                    //Create the planetary visibility statement
+                    var visibilityText = this.planetsString[i] + " will be visible " + this.year2018[monthName][i] + ".";
+
+                    //Create a paragraph to hold the visibility statement
+                    var paragraph = $("<p>");
+
+                    // Add visibility text to paragraph
+                    paragraph.text(visibilityText)
+
+                    // Append paragraph to visibility section of page
+                    $("#visibility").append(paragraph);
+
                 } else {
                     // display nothing if not visible
                     $("#visibility").append();
@@ -126,7 +176,7 @@ var visiblePlanets = {
                 // check the planet visibility status
                 if (this.year2019[monthName][i] !== "null") {
                     // display visibility stats in html div
-                    $("#visibility").append(this.planetsString[i] + " will be visbile " + this.year2018[monthName][i] + "<br>");
+                    $("#visibility").append(this.planetsString[i] + " will be visibie " + this.year2018[monthName][i] + "<br>");
                 } else {
                     // display nothing if not visible
                     $("#visibility").append();
@@ -140,8 +190,14 @@ var visiblePlanets = {
 //-------Once the page loads, execute these functions----------------------------------
 $(document).ready(function () {
 
+    //Display the planet slideshow
+    showSlides();
+
+    //Disaplay the planetary visibility
+    visiblePlanets.displayVisibility();
+
     $(document).on("click", "#search-button", function () {
-        
+
         //Prevent the submit button from reloading the page
         event.preventDefault();
 
@@ -159,7 +215,5 @@ $(document).ready(function () {
             alert("The location entered is not valid");
         }
     })
-    
-    visiblePlanets.displayVisibility();
 
 });

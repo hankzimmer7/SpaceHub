@@ -18,6 +18,13 @@ form {
     padding: 2.5rem 2rem;
 }
 
+.slideshow-container {
+  margin-bottom: 1rem;
+}
+.space-slide {
+    display: none;
+}
+
 /* --------Responsive Styling------------------------------------------- */
 
 /* Large devices (desktops, less than 1200px) */
@@ -43,6 +50,9 @@ form {
 /* Extra small devices (portrait phones, less than 576px) */
 
 @media screen and (max-width: 575.98px) {
+    h3 {
+        font-size: 1.5rem;
+    }
     .display-4 {
         font-size: 2rem;
     }
@@ -54,6 +64,9 @@ form {
 /* Tiny devices */
 
 @media screen and (max-width: 420px) {
+    h3 {
+        font-size: 1rem;
+    }
     .display-4 {
         font-size: 1.2rem;
     }
