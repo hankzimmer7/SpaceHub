@@ -45,3 +45,11 @@ $(document).ready(function () {
         getLocation();
     });
 });
+
+var geoApiKey = "vIThotHxCdFMxbA7OSxbY4kmK0bOGSBg";
+var geoUrl = "http://www.mapquestapi.com/geocoding/v1/address?key="+geoApiKey+"&location=Washington,DC"
+$.ajax({url:geoUrl,method:"GET"}).done(function(response){
+   console.log(response);
+  console.log(response.results[0].locations[0].latLng);
+    
+});

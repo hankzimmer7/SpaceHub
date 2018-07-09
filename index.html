@@ -7,7 +7,17 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>SpaceHub</title>
 
-    <!-- Link to jquery -->
+    <!-- Link to Boostrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
+        crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+        crossorigin="anonymous"></script>
+
+    <!-- Link to jquery (necessary for ajax since 3.3.1 doesn't seem to work) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     <!-- Link to javascript file -->
@@ -19,16 +29,71 @@
 </head>
 
 <body>
-    <h1>Space Hub</h1>
-    <div>
-        <p>Date</p>
-        <input type="text">;
-        <p>Location</p>
-        <input type="text">;
-        <button>Search</button>
-        <button id="get-user-location-button">Use my current location</button>
-        <p id="user-location"></p>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-sm navbar-dark">
+        <a class="navbar-brand" href="#">SpaceHub</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="about.html">About</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="container">
+        <div class="jumbotron">
+
+            <!-- Page Title -->
+            <div class="row">
+                <div class="col">
+                    <h1 class="display-4">Astronomical Event Search</h1>
+                </div>
+            </div>
+
+            <!-- Location and Date Input Form -->
+            <div class="row">
+                <div class="col">
+                    <form>
+                        <div class="form-group">
+                            <label for="dateInput">Date</label>
+                            <input type="date" class="form-control" id="dateInput">
+                            <small id="dateHelp" class="form-text text-muted">Enter the date you want to see an astronomical event.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="locationInput">City</label>
+                            <input type="city" class="form-control" id="cityInput" placeholder="Enter the location">
+                        </div>
+                        <button type="submit" class="btn btn-dark">Search</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Search Results Area -->
+            <div class="row">
+                <div class="col" id="search-results">
+                </div>
+            </div>
+
+            <!-- Weather Forecast Area -->
+            <div class="row">
+                <div class="col" id="weather-forecast">
+                </div>
+            </div>
+
+        </div>
     </div>
+
 </body>
 
 </html>
