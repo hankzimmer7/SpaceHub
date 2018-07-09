@@ -19,6 +19,9 @@
 
     <!-- Link to jquery (necessary for ajax since 3.3.1 doesn't seem to work) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    
+    <!-- Link to Moment.js-->
+    <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
 
     <!-- Link to javascript file -->
     <script src="assets/javascript/spacehub.js"></script>
@@ -61,10 +64,12 @@
                 </div>
             </div>
 
+
             <!-- Row for input form and planet slideshow -->
             <div class="row">
 
                 <!-- Location and Date Input Form -->
+
                 <div class="col">
                     <form>
                         <div class="form-group">
@@ -81,6 +86,7 @@
                         <button type="submit" class="btn btn-dark" id="search-button">Search</button>
                     </form>
                 </div>
+
 
                 <!-- Planet slideshow -->
                 <div class="col-md-6">
@@ -128,8 +134,8 @@
             <!-- Search Results Area - two columns, one for planetary visibility, one for weather. -->
             <div class="row" id="search-results">
 
+                <!-- Visibility Data Column -->
                 <div class="col-md-6 visibility">
-                    <!-- Visibility Data Area -->
                     <h3>Planetary visibility</h3>
                     <div id="visibility"></div>
                 </div>
