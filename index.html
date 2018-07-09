@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"> 
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -61,78 +61,100 @@
                 </div>
             </div>
 
-            <!-- Location and Date Input Form -->
+            <!-- Row for input form and planet slideshow -->
             <div class="row">
+
+                <!-- Location and Date Input Form -->
                 <div class="col">
                     <form>
                         <div class="form-group">
-                            <label for="dateInput">Date</label>
-                            <input type="date" class="form-control" id="dateInput">
+                            <label for="date-input">Date</label>
+                            <!-- html needs lower-case with dashes, vs. camelCase in JS -BW -->
+                            <input type="date" class="form-control" id="date-input">
                             <small id="dateHelp" class="form-text text-muted">Enter the date you want to see an astronomical event.</small>
                         </div>
                         <div class="form-group">
-                            <label for="locationInput">City</label>
-                            <input type="city" class="form-control" id="cityInput" placeholder="Enter the location">
+                            <label for="location-input">Location</label>
+                            <!-- html needs lower-case with dashes, vs. camelCase in JS -BW -->
+                            <input type="city" class="form-control" id="location-input" placeholder="Enter the location as zip code OR city, country">
                         </div>
-                        <button type="submit" class="btn btn-dark">Search</button>
+                        <button type="submit" class="btn btn-dark" id="search-button">Search</button>
                     </form>
                 </div>
-                <div class="col">
-  
-<div class="slideshow-container">
 
-  <div class="space-slide">
-    <img src="assets/images/space1.png" style="width:100%">
-  </div>
-   
-  <div class="space-slide">
-   <img src="assets/images/space2.png" style="width:100%"> 
-  </div>
+                <!-- Planet slideshow -->
+                <div class="col-md-6">
 
-   <div class="space-slide">
-   <img src="assets/images/space3.png" style="width:100%"> 
-  </div>
+                    <div class="slideshow-container">
+                        <div class="space-slide">
+                            <img src="assets/images/space1.png" style="width:100%">
+                        </div>
 
-   <div class="space-slide">
-   <img src="assets/images/space4.png" style="width:100%"> 
-  </div>
+                        <div class="space-slide">
+                            <img src="assets/images/space2.png" style="width:100%">
+                        </div>
 
-   <div class="space-slide">
-   <img src="assets/images/space5.png" style="width:100%"> 
-  </div>
+                        <div class="space-slide">
+                            <img src="assets/images/space3.png" style="width:100%">
+                        </div>
 
-   <div class="space-slide">
-   <img src="assets/images/space6.png" style="width:100%"> 
-  </div>
+                        <div class="space-slide">
+                            <img src="assets/images/space4.png" style="width:100%">
+                        </div>
 
-   <div class="space-slide">
-   <img src="assets/images/space7.png" style="width:100%"> 
-  </div>
+                        <div class="space-slide">
+                            <img src="assets/images/space5.png" style="width:100%">
+                        </div>
 
-   <div class="space-slide">
-   <img src="assets/images/space8.png" style="width:100%"> 
-  </div>
+                        <div class="space-slide">
+                            <img src="assets/images/space6.png" style="width:100%">
+                        </div>
+
+                        <div class="space-slide">
+                            <img src="assets/images/space7.png" style="width:100%">
+                        </div>
+
+                        <div class="space-slide">
+                            <img src="assets/images/space8.png" style="width:100%">
+                        </div>
+                    </div>
+
                 </div>
-            </div>
+                <!-- End of planet slideshow column -->
 
-            <!-- Search Results Area -->
-            <div class="row">
-                <div class="col" id="search-results">
+            </div>
+            <!-- End of Row for Input form and planet slideshow -->
+
+            <!-- Search Results Area - two columns, one for planetary visibility, one for weather. -->
+            <div class="row" id="search-results">
+
+                <div class="col-md-6 visibility">
+                    <!-- Visibility Data Area -->
+                    <h3>Planetary visibility</h3>
+                    <div id="visibility"></div>
                 </div>
-            </div>
 
-            <!-- Weather Forecast Area -->
-            <div class="row">
-                <div class="col" id="weather-forecast">
+                <!-- Weather Column -->
+                <div class="col-md-6 weather">
+                    <div class="row">
+                        <div class="col">
+                            <h3>Weather cooperability</h3>
+                            <div id="current-weather">
+                            </div>
+                            <div id="forecast-weather">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <!-- End of Weather Column -->
 
-            <!-- Visibility Data Area -->
-            <div class="visibility">
-                <p id="visibility"></p>
             </div>
+            <!-- End of Search Results -->
+
         </div>
     </div>
+    <!-- End of Main Content Area -->
+
 </body>
 
 </html>

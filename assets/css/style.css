@@ -2,9 +2,11 @@ body {
     background-image: url("../images/galaxy-background.jpg");
 }
 
-
 h1, p {
     color: rgb(50, 60, 60);
+}
+form {
+    margin-bottom: 1rem;
 }
 
 .navbar {
@@ -13,19 +15,15 @@ h1, p {
 
 .jumbotron {
     background: rgba(255, 255, 255, 0.8);
+    padding: 2.5rem 2rem;
 }
 
-
 .slideshow-container {
-  max-width: 1000px;
-  margin: auto;
-  float: right;
-
+  margin-bottom: 1rem;
 }
 .space-slide {
     display: none;
 }
-
 
 /* --------Responsive Styling------------------------------------------- */
 
@@ -52,14 +50,23 @@ h1, p {
 /* Extra small devices (portrait phones, less than 576px) */
 
 @media screen and (max-width: 575.98px) {
+    h3 {
+        font-size: 1.5rem;
+    }
     .display-4 {
         font-size: 2rem;
+    }
+    .jumbotron {
+        padding: 2rem 1rem;
     }
 }
 
 /* Tiny devices */
 
 @media screen and (max-width: 420px) {
+    h3 {
+        font-size: 1rem;
+    }
     .display-4 {
         font-size: 1.2rem;
     }
