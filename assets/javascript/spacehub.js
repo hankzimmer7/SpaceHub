@@ -39,7 +39,7 @@ function chanceOfClearSky(viewingLocation) { // queries forecast not current wea
                 // From the API doc https://openweathermap.org/forecast5#JSON, 
                 // list.dt returns the ***Time of data forecasted, unix, UTC***
                 fW.append(daysOfWeek[forecastDate.getDay()] + " "); //append the day of the week
-                fW.append(list.dt_txt.substring(12) + " UTC");
+                fW.append(list.dt_txt.substring(11) + " UTC");
                 fW.append(": " + list.weather[0].description + "<br>"); //append that day's weather
             }
         }); //end ajax call
