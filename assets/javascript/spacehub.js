@@ -47,7 +47,7 @@ $(document).ready(function () {
     visiblePlanets.displayVisibility();
 
 });
-//--------Declare global variables here-------------------------------------------------
+
 
 
 //--------Create Functions here--------------------------------------------------------
@@ -235,17 +235,4 @@ var visiblePlanets = {
     }
 }
 
-//-------Once the page loads, execute these functions----------------------------------
 
-
-
-
-
-
-
-//var geoUrl = "http://www.mapquestapi.com/geocoding/v1/address?key="+geoApiKey+"&location=Washington,DC"
-//$.ajax({url:geoUrl,method:"GET"}).done(function(response){
-  // console.log(response);
- // console.log(response.results[0].locations[0].latLng);
-    
-//});
