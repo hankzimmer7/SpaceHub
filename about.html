@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>SpaceHub</title>
+    <title>About SpaceHub</title>
 
     <!-- Link to Boostrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
@@ -57,57 +57,24 @@
             <!-- Page Title -->
             <div class="row">
                 <div class="col">
-                    <h1 class="display-4">Astronomical Event Search</h1>
+                    <h1 class="display-4">Who We Are</h1>
                 </div>
             </div>
 
-            <!-- Location and Date Input Form -->
+            <!-- Text Area -->
             <div class="row">
                 <div class="col">
-                    <form>
-                        <div class="form-group">
-                            <label for="date-input">Date</label>
-                            <!-- html needs lower-case with dashes, vs. camelCase in JS -BW -->
-                            <input type="date" class="form-control" id="date-input">
-                            <small id="dateHelp" class="form-text text-muted">Enter the date you want to see an astronomical event.</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="location-input">Location</label>
-                            <!-- html needs lower-case with dashes, vs. camelCase in JS -BW -->
-                            <input type="city" class="form-control" id="location-input" placeholder="Enter the location as zip code OR city, country">
-                        </div>
-                        <button type="submit" class="btn btn-dark" id="search-button">Search</button>
-                    </form>
+                    <div>
+                        <p>Spacehub is an aggregator for all things space related. We provide quick access to information on
+                            what may be visible in the night sky, and whether or not it will be clear enough to see those
+                            celestial objects. We also provide information about upcoming launches with countdown timers.</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- Search Results Area - two columns, one for planetary visibility, one for weather. \
-                The weather div needs two rows, one for current weather, and one for forecast -->
-            <div class="row" id="search-results">
-                <div class="col visibility">
-                    <!-- Visibility Data Area -->
-                    <h3>Planetary visibility</h3>
-                    <p id="visibility"></p>
-                </div>
-                
-                <!-- Current Weather Area -->
-                <div class="col weather">
-                    <div class="row">
-                        <h3>Weather cooperability</h3>
-                        <div class="col" id="current-weather">
-                        </div>
-                    </div>
-
-
-                    <!-- Weather Forecast Area -->
-                    <div class="row">
-                        <div class="col" id="forecast-weather">
-                        </div>
-                    </div>
-                </div> <!-- End of the weather column-->
-            </div> <!-- End of the search results column-->
         </div>
     </div>
+
 </body>
 
 </html>
