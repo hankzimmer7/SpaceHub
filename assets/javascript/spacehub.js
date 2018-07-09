@@ -7,7 +7,7 @@ var APIKey = "d63c21203366e4021c6216ff0916db71";
 function currentWeather(viewingLocation) { //for the current time
     console.log(viewingLocation);
     // var weatherqueryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + viewingLocation + "&units=imperial&appid=" + APIKey;
-    var weatherqueryURL = "http://api.openweathermap.org/data/2.5/weather?q=Bujumbura&appid=d63c21203366e4021c6216ff0916db71";
+    var weatherqueryURL = "http://api.openweathermap.org/data/2.5/weather?q=Atlanta,USA&appid=d63c21203366e4021c6216ff0916db71";
     $.ajax({
         url: weatherqueryURL,
         method: "GET"
@@ -21,8 +21,8 @@ function currentWeather(viewingLocation) { //for the current time
         }); //end ajax function
 } // end current weather function
 
-function chanceOfClearSky(viewingLocation) { // queries forecast not current weather
-    var forecastqueryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + viewingLocation + "&units=imperial&appid=" + APIKey;
+function chanceOfClearSky(viewingLocation) { // queries forecast not current weather removed: units=imperial&
+    var forecastqueryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + viewingLocation + "&appid=" + APIKey;
     $.ajax({
         url: forecastqueryURL,
         method: "GET"
@@ -39,8 +39,7 @@ function chanceOfClearSky(viewingLocation) { // queries forecast not current wea
                 // From the API doc https://openweathermap.org/forecast5#JSON, 
                 // list.dt returns the ***Time of data forecasted, unix, UTC***
                 fW.append(daysOfWeek[forecastDate.getDay()] + " "); //append the day of the week
-                fW.append(list.dt_txt.substring(list.dt_txt.length - 8, 8) + " UTC");
-                fW.append("<br>0123456789".substring(5, 3) + " UTC");
+                fW.append(list.dt_txt.substring(12) + " UTC");
                 fW.append(": " + list.weather[0].description + "<br>"); //append that day's weather
             }
         }); //end ajax call
@@ -67,7 +66,7 @@ function locationIsValid(inputLocation) {
 $(document).on("click", "#search-button", function () {
     // $("button").on("click", function () {
     event.preventDefault();
-    inputLocation = $("#viewing-location").val();
+    inputLocation = $("#location-input").val();
     if (locationIsValid(inputLocation) == true) {
         currentWeather(inputLocation);
         chanceOfClearSky(inputLocation);
@@ -153,7 +152,7 @@ var visiblePlanets = {
 //-------Once the page loads, execute these functions----------------------------------
 $(document).ready(function () {
 
-    document.getElementById("viewing-location").value = "Atlanta,GA"; // for quick and easy testing/troubleshooting
+    document.getElementById("location-input").value = "Atlanta,USA"; // for quick and easy testing/troubleshooting
     
     // {
     //     alert("The javascript file is linked!");
