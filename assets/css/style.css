@@ -2,6 +2,7 @@ body {
     background-image: url("../images/galaxy-background.jpg");
 }
 
+
 h1, p {
     color: rgb(50, 60, 60);
 }
@@ -13,6 +14,18 @@ h1, p {
 .jumbotron {
     background: rgba(255, 255, 255, 0.8);
 }
+
+
+.slideshow-container {
+  max-width: 1000px;
+  margin: auto;
+  float: right;
+
+}
+.space-slide {
+    display: none;
+}
+
 
 /* --------Responsive Styling------------------------------------------- */
 
