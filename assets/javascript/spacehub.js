@@ -3,6 +3,8 @@
 var APIKey = "166a433c57516f51dfab1f7edaed8413";
 
 //--------Create FUNCTIONS here--------------------------------------------------------
+
+
 function currentWeather(viewingLocation) { //for the current time
     // TBD programmatically. Set the location that will be used in the function calls
     var weatherqueryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + viewingLocation + "&units=imperial&appid=" + APIKey;
@@ -62,18 +64,6 @@ function locationIsValid(inputLocation) {
     };
 }
 
-// $("#search-button").on("click", function () {
-$(document).on("click", "#search-button", function () {
-    // $("button").on("click", function () {
-    event.preventDefault();
-    inputLocation = $("#location-input").val();
-    if (locationIsValid(inputLocation) == true) {
-        currentWeather(inputLocation);
-        chanceOfClearSky(inputLocation);
-    } else { // display please try again
-        alert("The location entered is not valid");
-    } // end if statement
-}) // end #search-button click function
 //-------- Objects and methods -------------------\\
 
 // create an object called visiblePlanets to hold the planet visibility data and methods for determining active visible planets
@@ -123,8 +113,7 @@ var visiblePlanets = {
                 if (this.year2018[monthName][i] !== "null") {
                     // display visibility stats in html div
                     $("#visibility").append(this.planetsString[i] + " will be visbile " + this.year2018[monthName][i] + "<br>");
-                }
-                else {
+                } else {
                     // display nothing if not visible
                     $("#visibility").append();
                 }
@@ -138,8 +127,7 @@ var visiblePlanets = {
                 if (this.year2019[monthName][i] !== "null") {
                     // display visibility stats in html div
                     $("#visibility").append(this.planetsString[i] + " will be visbile " + this.year2018[monthName][i] + "<br>");
-                }
-                else {
+                } else {
                     // display nothing if not visible
                     $("#visibility").append();
                 }
@@ -152,11 +140,26 @@ var visiblePlanets = {
 //-------Once the page loads, execute these functions----------------------------------
 $(document).ready(function () {
 
-    document.getElementById("location-input").value = "Atlanta,USA"; // for quick and easy testing/troubleshooting
-    
-    // {
-    //     alert("The javascript file is linked!");
-    // }
+    $(document).on("click", "#search-button", function () {
+        
+        //Prevent the submit button from reloading the page
+        event.preventDefault();
 
+        //Get the location that the user typed in
+        inputLocation = $("#location-input").val();
+
+        //If the user's input is a valid location
+        if (locationIsValid(inputLocation) === true) {
+
+            //Populate the weather area with weather information
+            currentWeather(inputLocation);
+            chanceOfClearSky(inputLocation);
+
+        } else { // display please try again
+            alert("The location entered is not valid");
+        }
+    })
+    
     visiblePlanets.displayVisibility();
+
 });

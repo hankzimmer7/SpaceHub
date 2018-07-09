@@ -5,6 +5,9 @@ body {
 h1, p {
     color: rgb(50, 60, 60);
 }
+form {
+    margin-bottom: 1rem;
+}
 
 .navbar {
     background-color: black;
@@ -12,6 +15,7 @@ h1, p {
 
 .jumbotron {
     background: rgba(255, 255, 255, 0.8);
+    padding: 2.5rem 2rem;
 }
 
 /* --------Responsive Styling------------------------------------------- */
@@ -41,6 +45,9 @@ h1, p {
 @media screen and (max-width: 575.98px) {
     .display-4 {
         font-size: 2rem;
+    }
+    .jumbotron {
+        padding: 2rem 1rem;
     }
 }
 
