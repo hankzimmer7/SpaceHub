@@ -138,6 +138,12 @@ function currentWeather(viewingLocation) { //for the current time
             //Append the weather statement to the current weather section of the page
             currentWeather.append(weatherParagraph);
 
+            //Have the current weather fly in from the right
+            anime({
+                targets: '#current-weather',
+                translateX: [500, 0],
+            });
+
             var latLong = response.coord.lat + "," + response.coord.lon
             var timezoneURL = "https://maps.googleapis.com/maps/api/timezone/json?location=" + latLong + "&timestamp=" + response.dt + "&key=" + GMapsKey;
             $.ajax({
@@ -173,6 +179,8 @@ function chanceOfClearSky(viewingLocation) { // queries forecast not current wea
 
                 //Create a paragraph to store the forecast statement
                 var forecastParagraph = $("<p>");
+                // forecastParagraph.attr("item-number", i);
+                forecastParagraph.attr("id", "item-" + i);
 
                 //The forecast text contains the day of the week and that day's weather
                 var forecastDayText = daysOfWeek[forecastDate.getDay()] + " ";
@@ -191,6 +199,25 @@ function chanceOfClearSky(viewingLocation) { // queries forecast not current wea
 
                 //Append the forecast statement to the forecast weather section of the page
                 fw.append(forecastParagraph);
+
+                //Target the most recently created element
+                target = "#item-" + i;
+
+                //If i is odd, have the forecast fly in from the left
+                if (i % 2 == 0) {
+                    anime({
+                        targets: target,
+                        translateX: [-500, 0],
+                    });
+                }
+
+                //If i is even, have the forecast fly in from the right
+                else {
+                    anime({
+                        targets: target,
+                        translateX: [500, 0],
+                    });
+                }
             }
         }); //end ajax call
 } // end chanceOfClearSky function
@@ -293,6 +320,13 @@ var visiblePlanets = {
 //-------Once the page loads, execute these functions--------------------------\\
 $(document).ready(function () {
 
+    //Have the title fly in from the right
+    anime({
+        targets: '.display-4',
+        translateX: [500, 0],
+        duration: 1000,
+        easing: 'easeInOutQuart'
+    });
 
     //Display the planet slideshow
     showSlides();
