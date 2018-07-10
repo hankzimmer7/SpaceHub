@@ -11,6 +11,9 @@ var inputLocation;
 var geoUrl;
 var reverseGeoUrl;
 var geoApiKey = "vIThotHxCdFMxbA7OSxbY4kmK0bOGSBg";
+var GMapsKey = "AIzaSyBGEg1nWHjxTxBD48-AkHMm0QV_TVn0S50";
+var timeOffset = 0;
+var locationTimezone = "";
 
 // Variable for storing the date the user entered
 var userDate;
@@ -58,9 +61,9 @@ function showDate() {
 }
 
 //Function to convert the input data
-function convertInputDate(){
-    monthName = moment(userDate,'YYYY,MM,DD').format('MMMM');
-    year = moment(userDate,'YYYY,MM,DD').format('YYYY');
+function convertInputDate() {
+    monthName = moment(userDate, 'YYYY,MM,DD').format('MMMM');
+    year = moment(userDate, 'YYYY,MM,DD').format('YYYY');
 }
 
 //Default Funtion to retrieve the user's location when the page loads
@@ -123,7 +126,6 @@ function currentWeather(viewingLocation) { //for the current time
             var cloudyOrNot = response.weather[0];
             var currentWeather = $("#current-weather");
             currentWeather.empty();
-
             //Create a paragraph to store the current weather statement
             var weatherParagraph = $("<p>");
 
@@ -141,7 +143,19 @@ function currentWeather(viewingLocation) { //for the current time
                 targets: '#current-weather',
                 translateX: [500, 0],
             });
-        }); //end ajax function
+
+            var latLong = response.coord.lat + "," + response.coord.lon
+            var timezoneURL = "https://maps.googleapis.com/maps/api/timezone/json?location=" + latLong + "&timestamp=" + response.dt + "&key=" + GMapsKey;
+            $.ajax({
+                    url: timezoneURL,
+                    method: "GET"
+                }) // We store all of the retrieved data inside of an object called "response"
+                .then(function (response) {
+                    timeOffset = response.dstOffset + response.rawOffset;
+                    locationTimezone = response.timeZoneName;
+                    chanceOfClearSky(viewingLocation);
+                }); //end GMaps ajax 
+        }); //end Weather ajax function
 } // end current weather function
 
 // Function to display the future weather forecast data
@@ -152,6 +166,7 @@ function chanceOfClearSky(viewingLocation) { // queries forecast not current wea
             method: "GET"
         })
         .then(function (response) { //report every *4th* of the 40 weather predictions, each 3h apart, 
+
             var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
             var fw = $("#forecast-weather");
             fw.empty();
@@ -168,10 +183,19 @@ function chanceOfClearSky(viewingLocation) { // queries forecast not current wea
                 forecastParagraph.attr("id", "item-" + i);
 
                 //The forecast text contains the day of the week and that day's weather
-                var forecastText = daysOfWeek[forecastDate.getDay()] + " " + list.dt_txt.substring(11) + " UTC: " + list.weather[0].description;
+                var forecastDayText = daysOfWeek[forecastDate.getDay()] + " ";
+                
+                var timZon = $("<span>"); //This is the time including a time zone title
+                timZon.attr("title", locationTimezone);
+                timZon.text(list.dt_txt.substring(11))
+                fw.append(timZon); //append the time
+
+                var forecastWeatherText = " " + list.weather[0].description;
 
                 //Add the forecast text to the paragraph
-                forecastParagraph.text(forecastText);
+                forecastParagraph.text(forecastDayText);
+                forecastParagraph.append(timZon);
+                forecastParagraph.append(forecastWeatherText);
 
                 //Append the forecast statement to the forecast weather section of the page
                 fw.append(forecastParagraph);
@@ -283,7 +307,7 @@ var visiblePlanets = {
 
                     // Append paragraph to visibility section of page
                     $("#visibility").append(paragraph);
-                    
+
                 } else {
                     // display nothing if not visible
                     $("#visibility").append();
@@ -324,7 +348,7 @@ $(document).ready(function () {
         userDate = $("#date-input").val();
         convertInputDate();
         visiblePlanets.displayVisibility();
-        
+
 
         //Get the location that the user typed in
         inputLocation = $("#location-input").val();
@@ -336,13 +360,6 @@ $(document).ready(function () {
 
             //Populate the weather area with weather information
             currentWeather(inputLocation);
-            chanceOfClearSky(inputLocation);
-
-            // anime({
-            //     targets: '#current-weather #forecast-weather',
-            //     translateX: [500, 0],
-            // });
-
 
         } else { // display please try again
             alert("The location entered is not valid");
