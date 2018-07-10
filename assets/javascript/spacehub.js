@@ -213,8 +213,7 @@ var visiblePlanets = {
     displayVisibility: function () {
         // empty the div for new results
         $("#visibility").empty();
-        // get month name
-       // var monthName = monthNames[d.getMonth()];
+
         // if year is 2018
         if (year == 2018) {
             // print visibility status for each planet
