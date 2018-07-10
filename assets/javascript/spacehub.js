@@ -17,6 +17,8 @@ var locationTimezone = "";
 
 // Variable for storing the date the user entered
 var userDate;
+// Variable for storing the current date
+var currentDate;
 
 //Variable for sotring the weather API key
 var weatherApiKey = "166a433c57516f51dfab1f7edaed8413";
@@ -58,6 +60,11 @@ function showSlides() {
 function showDate() {
     userDate = moment().format('YYYY-MM-DD');
     $("#date-input").val(userDate);
+}
+
+//Function to store the current date
+function currentDate() {
+    currentDate = moment().format('YYYY-MM-DD');
 }
 
 //Function to convert the input data
@@ -317,6 +324,37 @@ var visiblePlanets = {
     }
 }
 
+// create an object called launchCountdown to hold methods for displaying launch countdown
+var launchCountdown = {
+    // method to get data from API
+    getLaunchAPI: function() {
+        // assign queryURL to get "next" launch
+        var queryURL = "https://launchlibrary.net/1.3/launch/next/1";
+        console.log(queryURL);
+        // then ajax call
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).then(function(response) {
+            console.log(response);
+            // results var to store data
+            var launchResults = response.launches[0];
+            console.log(launchResults);
+            // launchdate var
+            var launchDate = launchResults.windowstart;
+            console.log(launchDate);
+            // location var
+            var launchLocation = launchResults.location.name;
+            console.log(launchLocation);
+
+        })
+    }
+    // first get browser date
+
+
+
+}
+
 //-------Once the page loads, execute these functions--------------------------\\
 $(document).ready(function () {
 
@@ -335,8 +373,14 @@ $(document).ready(function () {
     getLocation();
     showDate();
 
+    // store the currentDate
+    currentDate();
+
     //Display the planetary visibility
     visiblePlanets.displayVisibility();
+
+    // Display the launch countdown
+    launchCountdown.getLaunchAPI();
 
     //When the user clicks the search button
     $(document).on("click", "#search-button", function () {
