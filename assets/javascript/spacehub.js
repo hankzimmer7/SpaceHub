@@ -251,10 +251,29 @@ var visiblePlanets = {
         }
     }
 }
+ 
 
+   
 
 //-------Once the page loads, execute these functions--------------------------\\
 $(document).ready(function () {
+
+$("#picButton").on("click", function() {
+        var APIkey = "SB90oSEABnIVxulKWWm9a8gH7Eq7RyQgYAZCjKE1";
+    var queryURL = "https://api.nasa.gov/planetary/apod?api_key="+APIkey;
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+      }).then(function(responce) {
+        var imgUrl = responce.url;
+        var dayPic = $("<iframe>");
+        dayPic.attr("src", imgUrl);
+          dayPic.attr("alt", "Pic of Day");
+          $("#picofDay").prepend(dayPic);
+        
+})
+});
+
 
     //Display the planet slideshow
     showSlides();
@@ -291,5 +310,5 @@ $(document).ready(function () {
         } else { // display please try again
             alert("The location entered is not valid");
         }
-    })
+    });
 });
