@@ -19,6 +19,9 @@
 
     <!-- Link to jquery (necessary for ajax since 3.3.1 doesn't seem to work) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    
+    <!-- Link to Moment.js-->
+    <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
 
     <!-- Link to javascript file -->
     <!-- <script src="assets/javascript/moment-timezone.js"></script> -->
@@ -62,8 +65,12 @@
                 </div>
             </div>
 
-            <!-- Location and Date Input Form -->
+
+            <!-- Row for input form and planet slideshow -->
             <div class="row">
+
+                <!-- Location and Date Input Form -->
+
                 <div class="col">
                     <form>
                         <div class="form-group">
@@ -80,35 +87,80 @@
                         <button type="submit" class="btn btn-dark" id="search-button">Search</button>
                     </form>
                 </div>
-            </div>
 
-            <!-- Search Results Area - two columns, one for planetary visibility, one for weather. \
-                The weather div needs two rows, one for current weather, and one for forecast -->
-            <div class="row" id="search-results">
-                <div class="col visibility">
-                    <!-- Visibility Data Area -->
-                    <h3>Planetary visibility</h3>
-                    <p id="visibility"></p>
+
+                <!-- Planet slideshow -->
+                <div class="col-md-6">
+
+                    <div class="slideshow-container">
+                        <div class="space-slide">
+                            <img src="assets/images/space1.png" style="width:100%">
+                        </div>
+
+                        <div class="space-slide">
+                            <img src="assets/images/space2.png" style="width:100%">
+                        </div>
+
+                        <div class="space-slide">
+                            <img src="assets/images/space3.png" style="width:100%">
+                        </div>
+
+                        <div class="space-slide">
+                            <img src="assets/images/space4.png" style="width:100%">
+                        </div>
+
+                        <div class="space-slide">
+                            <img src="assets/images/space5.png" style="width:100%">
+                        </div>
+
+                        <div class="space-slide">
+                            <img src="assets/images/space6.png" style="width:100%">
+                        </div>
+
+                        <div class="space-slide">
+                            <img src="assets/images/space7.png" style="width:100%">
+                        </div>
+
+                        <div class="space-slide">
+                            <img src="assets/images/space8.png" style="width:100%">
+                        </div>
+                    </div>
+
                 </div>
-                
-                <!-- Current Weather Area -->
-                <div class="col weather">
+                <!-- End of planet slideshow column -->
+
+            </div>
+            <!-- End of Row for Input form and planet slideshow -->
+
+            <!-- Search Results Area - two columns, one for planetary visibility, one for weather. -->
+            <div class="row" id="search-results">
+
+                <!-- Visibility Data Column -->
+                <div class="col-md-6 visibility">
+                    <h3>Planetary visibility</h3>
+                    <div id="visibility"></div>
+                </div>
+
+                <!-- Weather Column -->
+                <div class="col-md-6 weather">
                     <div class="row">
-                        <h3>Weather cooperability</h3>
-                        <div class="col" id="current-weather">
+                        <div class="col">
+                            <h3>Weather cooperability</h3>
+                            <div id="current-weather">
+                            </div>
+                            <div id="forecast-weather">
+                            </div>
                         </div>
                     </div>
+                </div>
+                <!-- End of Weather Column -->
 
+            </div>
+            <!-- End of Search Results -->
 
-                    <!-- Weather Forecast Area -->
-                    <div class="row">
-                        <div class="col" id="forecast-weather">
-                        </div>
-                    </div>
-                </div> <!-- End of the weather column-->
-            </div> <!-- End of the search results column-->
         </div>
     </div>
-</body>
+    <!-- End of Main Content Area -->
+
 
 </html>
