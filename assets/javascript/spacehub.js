@@ -54,9 +54,13 @@ function showSlides() {
 //Function to show the current date
 function showDate() {
     userDate = moment().format('YYYY-MM-DD');
-    console.log(userDate);
-
     $("#date-input").val(userDate);
+}
+
+//Function to convert the input data
+function convertInputDate(){
+    monthName = moment(userDate,'YYYY,MM,DD').format('MMMM');
+    year = moment(userDate,'YYYY,MM,DD').format('YYYY');
 }
 
 //Default Funtion to retrieve the user's location when the page loads
@@ -85,10 +89,8 @@ function convertToLatLng() {
         url: geoUrl,
         method: "GET"
     }).done(function (response) {
-        console.log(response.results[0].locations[0].latLng);
         userLatitude = response.results[0].locations[0].latLng.lat;
         userLongitude = response.results[0].locations[0].latLng.lng;
-        console.log("lat: " + userLatitude + " lng: " + userLongitude);
     });
 }
 
@@ -97,7 +99,6 @@ function showPosition(position) {
     userLatitude = position.coords.latitude;
     userLongitude = position.coords.longitude;
 
-    console.log("Latitude: " + userLatitude + " Longitude: " + userLongitude);
     reverseGeoUrl = "https://www.mapquestapi.com/geocoding/v1/reverse?key=" + geoApiKey + "&location=" + userLatitude + "," + userLongitude + "&includeRoadMetadata=true&includeNearestIntersection=true";
     $.ajax({
         url: reverseGeoUrl,
@@ -266,13 +267,6 @@ var visiblePlanets = {
     }
 }
 
-function convertInputDate(){
-    monthName = moment(userDate,'YYYY,MM,DD').format('MMMM');
-    year = moment(userDate,'YYYY,MM,DD').format('YYYY');
-    console.log(monthName + " " + year);
-}
-
-
 //-------Once the page loads, execute these functions--------------------------\\
 $(document).ready(function () {
 
@@ -302,7 +296,6 @@ $(document).ready(function () {
         //Get the location that the user typed in
         inputLocation = $("#location-input").val();
 
-        console.log(inputLocation + " " + userDate);
         convertToLatLng();
 
         //If the user's input is a valid location
