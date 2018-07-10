@@ -97,6 +97,18 @@ function convertToLatLng() {
     });
 }
 
+function dateIsInNextFive(viewingDate) {
+    var foo = new Date();
+    console.log("viewingDate is " + viewingDate);
+    console.log(foo)
+    if (0 < 5) { //math says it's within five)
+        return true;
+    }
+    else {
+        return false 
+    } // end if else
+} // end dateIsInNextFive
+
 //Function to show the user's location
 function showPosition(position) {
     userLatitude = position.coords.latitude;
@@ -119,9 +131,9 @@ function currentWeather(viewingLocation) { //for the current time
     // TBD programmatically. Set the location that will be used in the function calls
     var weatherqueryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + viewingLocation + "&units=imperial&appid=" + weatherApiKey;
     $.ajax({
-            url: weatherqueryURL,
-            method: "GET"
-        }) // We store all of the retrieved data inside of an object called "response"
+        url: weatherqueryURL,
+        method: "GET"
+    }) // We store all of the retrieved data inside of an object called "response"
         .then(function (response) {
             var cloudyOrNot = response.weather[0];
             var currentWeather = $("#current-weather");
@@ -147,27 +159,27 @@ function currentWeather(viewingLocation) { //for the current time
             var latLong = response.coord.lat + "," + response.coord.lon
             var timezoneURL = "https://maps.googleapis.com/maps/api/timezone/json?location=" + latLong + "&timestamp=" + response.dt + "&key=" + GMapsKey;
             $.ajax({
-                    url: timezoneURL,
-                    method: "GET"
-                }) // We store all of the retrieved data inside of an object called "response"
+                url: timezoneURL,
+                method: "GET"
+            }) // We store all of the retrieved data inside of an object called "response"
                 .then(function (response) {
                     timeOffset = response.dstOffset + response.rawOffset;
                     locationTimezone = response.timeZoneName;
-                    chanceOfClearSky(viewingLocation);
+                    futureWeather(viewingLocation);
                 }); //end GMaps ajax 
         }); //end Weather ajax function
 } // end current weather function
 
 // Function to display the future weather forecast data
-function chanceOfClearSky(viewingLocation) { // queries forecast not current weather removed: units=imperial&
+function futureWeather(viewingLocation) { // queries forecast not current weather removed: units=imperial&
     var forecastqueryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + viewingLocation + "&appid=" + weatherApiKey;
     $.ajax({
-            url: forecastqueryURL,
-            method: "GET"
-        })
+        url: forecastqueryURL,
+        method: "GET"
+    })
         .then(function (response) { //report every *4th* of the 40 weather predictions, each 3h apart, 
 
-            var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+            var daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
             var fw = $("#forecast-weather");
             fw.empty();
             for (i = 0; i < 10; i++) {
@@ -184,7 +196,7 @@ function chanceOfClearSky(viewingLocation) { // queries forecast not current wea
 
                 //The forecast text contains the day of the week and that day's weather
                 var forecastDayText = daysOfWeek[forecastDate.getDay()] + " ";
-                
+
                 var timZon = $("<span>"); //This is the time including a time zone title
                 timZon.attr("title", locationTimezone);
                 timZon.text(list.dt_txt.substring(11))
@@ -218,10 +230,85 @@ function chanceOfClearSky(viewingLocation) { // queries forecast not current wea
                         translateX: [500, 0],
                     });
                 }
-            }
+            } //end for loop
         }); //end ajax call
-} // end chanceOfClearSky function
+} // end futureWeather function
 
+// Function to display one day's forecast data
+function oneDaysWeather(viewingDate, viewingLocation) { // queries forecast not current weather removed: units=imperial&
+    var forecastqueryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + viewingLocation + "&appid=" + weatherApiKey;
+    $.ajax({
+        url: forecastqueryURL,
+        method: "GET"
+    })
+        .then(function (response) { //report every *4th* of the 40 weather predictions, each 3h apart, 
+
+            var fw = $("#forecast-weather");
+            fw.empty();
+            fw.text("Weather for " + viewingDate)
+            for (i = 0; i < 5; i++) {
+                // i=0 is early morning, or 3am.
+                // i=1 is dawn, or 6am
+                // i=2 is dusk, or 6pm
+                // i=3 is evening, or 9pm
+                // i=4 is night, or midnight
+                // dawn and dusk are skewed for higher latitude values
+                // however, this covers a large percentage of the world's population
+
+
+
+                // math is needed here. 40 array elements are returned. Which ones do we display?
+
+
+                var list = response.list[weatherPeriod];
+                var forecastDate = new Date(list.dt * 1000); //convert unix to JS.
+                // From the API doc https://openweathermap.org/forecast5#JSON, 
+                // list.dt returns the ***Time of data forecasted, unix, UTC***
+
+                //Create a paragraph to store the forecast statement
+                var forecastParagraph = $("<p>");
+                // forecastParagraph.attr("item-number", i);
+                forecastParagraph.attr("id", "item-" + i);
+
+                //The forecast text contains the day of the week and that day's weather
+                var forecastDayText = daysOfWeek[forecastDate.getDay()] + " ";
+
+                var timZon = $("<span>"); //This is the time including a time zone title
+                timZon.attr("title", locationTimezone);
+                timZon.text(list.dt_txt.substring(11))
+                fw.append(timZon); //append the time
+
+                var forecastWeatherText = " " + list.weather[0].description;
+
+                //Add the forecast text to the paragraph
+                forecastParagraph.text(forecastDayText);
+                forecastParagraph.append(timZon);
+                forecastParagraph.append(forecastWeatherText);
+
+                //Append the forecast statement to the forecast weather section of the page
+                fw.append(forecastParagraph);
+
+                //Target the most recently created element
+                target = "#item-" + i;
+
+                //If i is odd, have the forecast fly in from the left
+                if (i % 2 == 0) {
+                    anime({
+                        targets: target,
+                        translateX: [-500, 0],
+                    });
+                }
+
+                //If i is even, have the forecast fly in from the right
+                else {
+                    anime({
+                        targets: target,
+                        translateX: [500, 0],
+                    });
+                } // end if statement
+            } // end for loop
+        }); // end ajax call
+} // end oneDaysWeather function
 
 //-------- Objects and methods ---------------------------------------------\\
 
@@ -335,8 +422,9 @@ $(document).ready(function () {
     getLocation();
     showDate();
 
-    //Display the planetary visibility
+    //Display the planetary visibility & weather
     visiblePlanets.displayVisibility();
+    currentWeather(inputLocation); // also calls the GMaps timezone ajax, then the futureWeather ajax
 
     //When the user clicks the search button
     $(document).on("click", "#search-button", function () {
@@ -347,19 +435,20 @@ $(document).ready(function () {
         //Get the date that the user selected
         userDate = $("#date-input").val();
         convertInputDate();
-        visiblePlanets.displayVisibility();
-
 
         //Get the location that the user typed in
         inputLocation = $("#location-input").val();
 
-        convertToLatLng();
+        convertToLatLng(); //what does this do? -BW
+        visiblePlanets.displayVisibility();
 
         //If the user's input is a valid location
         if (locationIsValid(inputLocation) === true) {
 
-            //Populate the weather area with weather information
-            currentWeather(inputLocation);
+            //Populate the weather area with one day's information
+            if (dateIsInNextFive(userDate)) {
+                oneDaysWeather(userDate, inputLocation);
+            }
 
         } else { // display please try again
             alert("The location entered is not valid");
