@@ -287,6 +287,8 @@ $(document).ready(function () {
     anime({
         targets: '.display-4',
         translateX: [500, 0],
+        duration: 1000,
+        easing: 'easeInOutQuart'
     });
 
     //Display the planet slideshow
