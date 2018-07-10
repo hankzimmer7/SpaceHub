@@ -78,7 +78,7 @@ function locationIsValid(inputLocation) {
 
 //Function to convert inputLocation to latLng
 function convertToLatLng() {
-    geoUrl = "http://www.mapquestapi.com/geocoding/v1/address?key=" + geoApiKey + "&location=" + inputLocation;
+    geoUrl = "https://www.mapquestapi.com/geocoding/v1/address?key=" + geoApiKey + "&location=" + inputLocation;
     $.ajax({
         url: geoUrl,
         method: "GET"
@@ -96,7 +96,7 @@ function showPosition(position) {
     userLongitude = position.coords.longitude;
 
     console.log("Latitude: " + userLatitude + " Longitude: " + userLongitude);
-    reverseGeoUrl = "http://www.mapquestapi.com/geocoding/v1/reverse?key=" + geoApiKey + "&location=" + userLatitude + "," + userLongitude + "&includeRoadMetadata=true&includeNearestIntersection=true";
+    reverseGeoUrl = "https://www.mapquestapi.com/geocoding/v1/reverse?key=" + geoApiKey + "&location=" + userLatitude + "," + userLongitude + "&includeRoadMetadata=true&includeNearestIntersection=true";
     $.ajax({
         url: reverseGeoUrl,
         method: "GET"
@@ -132,6 +132,12 @@ function currentWeather(viewingLocation) { //for the current time
 
             //Append the weather statement to the current weather section of the page
             currentWeather.append(weatherParagraph);
+
+            //Have the current weather fly in from the right
+            anime({
+                targets: '#current-weather',
+                translateX: [500, 0],
+            });
         }); //end ajax function
 } // end current weather function
 
@@ -155,6 +161,8 @@ function chanceOfClearSky(viewingLocation) { // queries forecast not current wea
 
                 //Create a paragraph to store the forecast statement
                 var forecastParagraph = $("<p>");
+                // forecastParagraph.attr("item-number", i);
+                forecastParagraph.attr("id", "item-" + i);
 
                 //The forecast text contains the day of the week and that day's weather
                 var forecastText = daysOfWeek[forecastDate.getDay()] + " " + list.dt_txt.substring(11) + " UTC: " + list.weather[0].description;
@@ -164,6 +172,25 @@ function chanceOfClearSky(viewingLocation) { // queries forecast not current wea
 
                 //Append the forecast statement to the forecast weather section of the page
                 fw.append(forecastParagraph);
+
+                //Target the most recently created element
+                target = "#item-" + i;
+
+                //If i is odd, have the forecast fly in from the left
+                if (i % 2 == 0) {
+                    anime({
+                        targets: target,
+                        translateX: [-500, 0],
+                    });
+                }
+
+                //If i is even, have the forecast fly in from the right
+                else {
+                    anime({
+                        targets: target,
+                        translateX: [500, 0],
+                    });
+                }
             }
         }); //end ajax call
 } // end chanceOfClearSky function
@@ -256,6 +283,12 @@ var visiblePlanets = {
 //-------Once the page loads, execute these functions--------------------------\\
 $(document).ready(function () {
 
+    //Have the title fly in from the right
+    anime({
+        targets: '.display-4',
+        translateX: [500, 0],
+    });
+
     //Display the planet slideshow
     showSlides();
 
@@ -287,6 +320,12 @@ $(document).ready(function () {
             //Populate the weather area with weather information
             currentWeather(inputLocation);
             chanceOfClearSky(inputLocation);
+
+            // anime({
+            //     targets: '#current-weather #forecast-weather',
+            //     translateX: [500, 0],
+            // });
+
 
         } else { // display please try again
             alert("The location entered is not valid");
