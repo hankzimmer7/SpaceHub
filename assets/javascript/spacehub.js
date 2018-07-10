@@ -145,8 +145,6 @@ function currentWeather(viewingLocation) { //for the current time
                     method: "GET"
                 }) // We store all of the retrieved data inside of an object called "response"
                 .then(function (response) {
-                    console.log(response);
-                    console.log("testing");
                     timeOffset = response.dstOffset + response.rawOffset;
                     locationTimezone = response.timeZoneName;
                     chanceOfClearSky(viewingLocation);
