@@ -78,7 +78,7 @@ function locationIsValid(inputLocation) {
 
 //Function to convert inputLocation to latLng
 function convertToLatLng() {
-    geoUrl = "http://www.mapquestapi.com/geocoding/v1/address?key=" + geoApiKey + "&location=" + inputLocation;
+    geoUrl = "https://www.mapquestapi.com/geocoding/v1/address?key=" + geoApiKey + "&location=" + inputLocation;
     $.ajax({
         url: geoUrl,
         method: "GET"
@@ -96,7 +96,7 @@ function showPosition(position) {
     userLongitude = position.coords.longitude;
 
     console.log("Latitude: " + userLatitude + " Longitude: " + userLongitude);
-    reverseGeoUrl = "http://www.mapquestapi.com/geocoding/v1/reverse?key=" + geoApiKey + "&location=" + userLatitude + "," + userLongitude + "&includeRoadMetadata=true&includeNearestIntersection=true";
+    reverseGeoUrl = "https://www.mapquestapi.com/geocoding/v1/reverse?key=" + geoApiKey + "&location=" + userLatitude + "," + userLongitude + "&includeRoadMetadata=true&includeNearestIntersection=true";
     $.ajax({
         url: reverseGeoUrl,
         method: "GET"
