@@ -29,7 +29,9 @@ var year = d.getFullYear();
 // store month
 var month = d.getMonth();
 // month names
-var monthNames = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "november", "december"];
+
+var monthName = monthNames[d.getMonth()];
 
 
 //--------FUNCTIONS are declared here-------------------------------------------\\
@@ -52,9 +54,13 @@ function showSlides() {
 //Function to show the current date
 function showDate() {
     userDate = moment().format('YYYY-MM-DD');
-    console.log(userDate);
-
     $("#date-input").val(userDate);
+}
+
+//Function to convert the input data
+function convertInputDate(){
+    monthName = moment(userDate,'YYYY,MM,DD').format('MMMM');
+    year = moment(userDate,'YYYY,MM,DD').format('YYYY');
 }
 
 //Default Funtion to retrieve the user's location when the page loads
@@ -83,10 +89,8 @@ function convertToLatLng() {
         url: geoUrl,
         method: "GET"
     }).done(function (response) {
-        console.log(response.results[0].locations[0].latLng);
         userLatitude = response.results[0].locations[0].latLng.lat;
         userLongitude = response.results[0].locations[0].latLng.lng;
-        console.log("lat: " + userLatitude + " lng: " + userLongitude);
     });
 }
 
@@ -95,7 +99,6 @@ function showPosition(position) {
     userLatitude = position.coords.latitude;
     userLongitude = position.coords.longitude;
 
-    console.log("Latitude: " + userLatitude + " Longitude: " + userLongitude);
     reverseGeoUrl = "https://www.mapquestapi.com/geocoding/v1/reverse?key=" + geoApiKey + "&location=" + userLatitude + "," + userLongitude + "&includeRoadMetadata=true&includeNearestIntersection=true";
     $.ajax({
         url: reverseGeoUrl,
@@ -206,39 +209,40 @@ var visiblePlanets = {
     // need an object for years
     year2018: {
         // need a visibility counter for each month + planet
-        january: ["at dawn", "null", "in the morning", "in the morning", "at dawn", "in the evening", "in the evening"],
-        february: ["null", "null", "in the morning", "in the morning", "in the morning", "in the evening", "at dusk"],
-        march: ["at dusk", "at dusk", "in the morning", "in the morning", "in the morning", "in the evening", "null"],
-        april: ["at dawn", "at dusk", "in the morning", "in the morning", "in the morning", "null", "in the morning"],
-        may: ["at dawn", "in the evening", "in the morning", "all night", "in the morning", "at dawn", "in the morning"],
-        june: ["null", "in the evening", "in the morning", "in the evening", "all night", "in the morning", "in the morning"],
-        july: ["at dusk", "in the evening", "all night", "in the evening", "in the evening", "in the morning", "in the morning"],
-        august: ["at dawn", "in the evening", "in the evening", "in the evening", "in the evening", "in the morning", "in the morning"],
-        september: ["null", "in the evening", "in the evening", "in the evening", "in the evening", "in the morning", "all night"],
-        october: ["at dusk", "at dusk", "in the evening", "in the evening", "in the evening", "all night", "in the evening"],
-        november: ["at dusk", "at dawn", "in the evening", "null", "in the evening", "in the evening", "in the evening"],
-        december: ["at dawn", "in the morning", "in the evening", "at dawn", "at dusk", "in the evening", "in the evening"],
+        January: ["at dawn", "null", "in the morning", "in the morning", "at dawn", "in the evening", "in the evening"],
+        February: ["null", "null", "in the morning", "in the morning", "in the morning", "in the evening", "at dusk"],
+        March: ["at dusk", "at dusk", "in the morning", "in the morning", "in the morning", "in the evening", "null"],
+        April: ["at dawn", "at dusk", "in the morning", "in the morning", "in the morning", "null", "in the morning"],
+        May: ["at dawn", "in the evening", "in the morning", "all night", "in the morning", "at dawn", "in the morning"],
+        June: ["null", "in the evening", "in the morning", "in the evening", "all night", "in the morning", "in the morning"],
+        July: ["at dusk", "in the evening", "all night", "in the evening", "in the evening", "in the morning", "in the morning"],
+        August: ["at dawn", "in the evening", "in the evening", "in the evening", "in the evening", "in the morning", "in the morning"],
+        September: ["null", "in the evening", "in the evening", "in the evening", "in the evening", "in the morning", "all night"],
+        October: ["at dusk", "at dusk", "in the evening", "in the evening", "in the evening", "all night", "in the evening"],
+        November: ["at dusk", "at dawn", "in the evening", "null", "in the evening", "in the evening", "in the evening"],
+        December: ["at dawn", "in the morning", "in the evening", "at dawn", "at dusk", "in the evening", "in the evening"],
     },
     year2019: {
         // visibility counter for each month + planet
-        january: ["null", "in the morning", "in the evening", "in the morning", "null", "in the evening", "in the evening"],
-        february: ["at dusk", "in the morning", "in the evening", "in the morning", "in the morning", "in the evening", "at dusk"],
-        march: ["null", "in the morning", "in the evening", "in the morning", "in the morning", "in the evening", "null"],
-        april: ["at dawn", "in the morning", "in the evening", "in the morning", "in the morning", "null", "in the morning"],
-        may: ["null", "at dawn", "in the evening", "in the morning", "in the morning", "at dawn", "in the morning"],
-        june: ["at dusk", "at dawn", "at dusk", "all night", "in the morning", "in the morning", "in the morning"],
-        july: ["null", "null", "at dusk", "in the evening", "in the evening", "all night", "in the morning"],
-        august: ["at dawn", "null", "null", "in the evening", "in the evening", "in the morning", "in the morning"],
-        september: ["null", "null", "null", "in the evening", "in the evening", "in the morning", "all night"],
-        october: ["at dusk", "at dusk", "at dawn", "in the evening", "in the evening", "all night", "in the evening"],
-        november: ["at dawn", "at dusk", "at dawn", "in the evening", "in the evening", "in the evening", "in the evening"],
-        december: ["at dawn", "in the evening", "in the morning", "null", "at dusk", "in the evening", "in the evening"],
+        January: ["null", "in the morning", "in the evening", "in the morning", "null", "in the evening", "in the evening"],
+        February: ["at dusk", "in the morning", "in the evening", "in the morning", "in the morning", "in the evening", "at dusk"],
+        March: ["null", "in the morning", "in the evening", "in the morning", "in the morning", "in the evening", "null"],
+        April: ["at dawn", "in the morning", "in the evening", "in the morning", "in the morning", "null", "in the morning"],
+        May: ["null", "at dawn", "in the evening", "in the morning", "in the morning", "at dawn", "in the morning"],
+        June: ["at dusk", "at dawn", "at dusk", "all night", "in the morning", "in the morning", "in the morning"],
+        July: ["null", "null", "at dusk", "in the evening", "in the evening", "all night", "in the morning"],
+        August: ["at dawn", "null", "null", "in the evening", "in the evening", "in the morning", "in the morning"],
+        September: ["null", "null", "null", "in the evening", "in the evening", "in the morning", "all night"],
+        October: ["at dusk", "at dusk", "at dawn", "in the evening", "in the evening", "all night", "in the evening"],
+        November: ["at dawn", "at dusk", "at dawn", "in the evening", "in the evening", "in the evening", "in the evening"],
+        December: ["at dawn", "in the evening", "in the morning", "null", "at dusk", "in the evening", "in the evening"],
     },
     displayVisibility: function () {
-        // get month name
-        var monthName = monthNames[d.getMonth()];
+        // empty the div for new results
+        $("#visibility").empty();
+
         // if year is 2018
-        if (year === 2018) {
+        if (year == 2018) {
             // print visibility status for each planet
             for (i = 0; i < this.planetsString.length; i++) {
                 // check the planet visibility status
@@ -263,13 +267,23 @@ var visiblePlanets = {
             }
         }
         // if year if 2019
-        else if (year === 2019) {
+        else if (year == 2019) {
             // run function same as before with year2019
             for (i = 0; i < this.planetsString.length; i++) {
                 // check the planet visibility status
                 if (this.year2019[monthName][i] !== "null") {
-                    // display visibility stats in html div
-                    $("#visibility").append(this.planetsString[i] + " will be visibie " + this.year2018[monthName][i] + "<br>");
+                    //Create the planetary visibility statement
+                    var visibilityText = this.planetsString[i] + " will be visible " + this.year2019[monthName][i] + ".";
+
+                    //Create a paragraph to hold the visibility statement
+                    var paragraph = $("<p>");
+
+                    // Add visibility text to paragraph
+                    paragraph.text(visibilityText)
+
+                    // Append paragraph to visibility section of page
+                    $("#visibility").append(paragraph);
+                    
                 } else {
                     // display nothing if not visible
                     $("#visibility").append();
@@ -278,7 +292,6 @@ var visiblePlanets = {
         }
     }
 }
-
 
 //-------Once the page loads, execute these functions--------------------------\\
 $(document).ready(function () {
@@ -309,11 +322,13 @@ $(document).ready(function () {
 
         //Get the date that the user selected
         userDate = $("#date-input").val();
+        convertInputDate();
+        visiblePlanets.displayVisibility();
+        
 
         //Get the location that the user typed in
         inputLocation = $("#location-input").val();
 
-        console.log(inputLocation + " " + userDate);
         convertToLatLng();
 
         //If the user's input is a valid location
