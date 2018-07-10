@@ -1,43 +1,63 @@
 //--------Declare global VARIABLES here-------------------------------------------------
 // This is our API key from the ajax Bujumbura exercise
 var APIKey = "166a433c57516f51dfab1f7edaed8413";
+var GMapsKey = "AIzaSyBGEg1nWHjxTxBD48-AkHMm0QV_TVn0S50";
+var timeOffset = 0;
+var locationTimezone = "";
 
 //--------Create FUNCTIONS here--------------------------------------------------------
 function currentWeather(viewingLocation) { //for the current time
     // TBD programmatically. Set the location that will be used in the function calls
     var weatherqueryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + viewingLocation + "&units=imperial&appid=" + APIKey;
     $.ajax({
-            url: weatherqueryURL,
-            method: "GET"
-        }) // We store all of the retrieved data inside of an object called "response"
+        url: weatherqueryURL,
+        method: "GET"
+    }) // We store all of the retrieved data inside of an object called "response"
         .then(function (response) {
             var cloudyOrNot = response.weather[0];
             var currentWeather = $("#current-weather");
             currentWeather.empty();
             currentWeather.append("Current weather: " + cloudyOrNot.main);
             currentWeather.append(", or " + cloudyOrNot.description + "<br>")
-        }); //end ajax function
+
+            var latLong = response.coord.lat + "," + response.coord.lon
+            var timezoneURL = "https://maps.googleapis.com/maps/api/timezone/json?location=" + latLong + "&timestamp=" + response.dt + "&key=" + GMapsKey;
+            $.ajax({
+                url: timezoneURL,
+                method: "GET"
+            }) // We store all of the retrieved data inside of an object called "response"
+                .then(function (response) {
+                    console.log(response);
+                    timeOffset = response.dstOffset + response.rawOffset;
+                    locationTimezone = response.timeZoneName;
+                    chanceOfClearSky(viewingLocation);
+                }); //end GMaps ajax 
+        }); //end Weather ajax function
 } // end current weather function
 
 function chanceOfClearSky(viewingLocation) { // queries forecast not current weather removed: units=imperial&
     var forecastqueryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + viewingLocation + "&appid=" + APIKey;
     $.ajax({
-            url: forecastqueryURL,
-            method: "GET"
-        })
+        url: forecastqueryURL,
+        method: "GET"
+    })
         .then(function (response) { //report every *4th* of the 40 weather predictions, each 3h apart, 
-            var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+            // console.log(response);
+            var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
             var fW = $("#forecast-weather");
             $("#forecast-weather").empty();
             for (i = 0; i < 10; i++) {
                 var weatherPeriod = i * 4;
                 var list = response.list[weatherPeriod];
                 var fW = $("#forecast-weather");
-                var forecastDate = new Date(list.dt * 1000); //convert unix to JS.
+                var forecastDate = new Date( (list.dt + timeOffset) * 1000); //convert unix to JS, using the timeOffset retrieved from Google Maps
                 // From the API doc https://openweathermap.org/forecast5#JSON, 
                 // list.dt returns the ***Time of data forecasted, unix, UTC***
                 fW.append(daysOfWeek[forecastDate.getDay()] + " "); //append the day of the week
-                fW.append(list.dt_txt.substring(11) + " UTC");
+                var timZon = $("<span>");
+                timZon.attr("title", locationTimezone);
+                timZon.text(list.dt_txt.substring(11))
+                fW.append(timZon); //append the time
                 fW.append(": " + list.weather[0].description + "<br>"); //append that day's weather
             }
         }); //end ajax call
@@ -69,7 +89,7 @@ $(document).on("click", "#search-button", function () {
     inputLocation = $("#location-input").val();
     if (locationIsValid(inputLocation) == true) {
         currentWeather(inputLocation);
-        chanceOfClearSky(inputLocation);
+        // chanceOfClearSky(inputLocation); moving this to AFTER the Gmaps
     } else { // display please try again
         alert("The location entered is not valid");
     } // end if statement
@@ -153,7 +173,7 @@ var visiblePlanets = {
 $(document).ready(function () {
 
     document.getElementById("location-input").value = "Atlanta,USA"; // for quick and easy testing/troubleshooting
-    
+
     // {
     //     alert("The javascript file is linked!");
     // }
