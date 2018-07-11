@@ -117,7 +117,6 @@ if(((convertUnix < d.getTime()/1000)&&((d.getTime()/1000 - convertUnix)>24*60*60
 }
 else{
    var datesBetween = convertUnix-d.getTime()/1000;
-        console.log(datesBetween); 
    if (datesBetween > 5*24*60*60 ){
        $("#forecast-weather").text("Weather forecast available only for the next five days");
    }
@@ -201,7 +200,6 @@ function futureWeather(viewingLocation) { // queries forecast not current weathe
         method: "GET"
     })
         .then(function (response) { //report every *4th* of the 40 weather predictions, each 3h apart, 
-            console.log(response);
             var daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
             var fw = $("#forecast-weather");
             fw.empty();
