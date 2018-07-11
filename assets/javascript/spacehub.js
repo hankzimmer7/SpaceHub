@@ -126,9 +126,9 @@ function currentWeather(viewingLocation) { //for the current time
     // TBD programmatically. Set the location that will be used in the function calls
     var weatherqueryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + viewingLocation + "&units=imperial&appid=" + weatherApiKey;
     $.ajax({
-            url: weatherqueryURL,
-            method: "GET"
-        }) // We store all of the retrieved data inside of an object called "response"
+        url: weatherqueryURL,
+        method: "GET"
+    }) // We store all of the retrieved data inside of an object called "response"
         .then(function (response) {
             var cloudyOrNot = response.weather[0];
             var currentWeather = $("#current-weather");
@@ -154,9 +154,9 @@ function currentWeather(viewingLocation) { //for the current time
             var latLong = response.coord.lat + "," + response.coord.lon
             var timezoneURL = "https://maps.googleapis.com/maps/api/timezone/json?location=" + latLong + "&timestamp=" + response.dt + "&key=" + GMapsKey;
             $.ajax({
-                    url: timezoneURL,
-                    method: "GET"
-                }) // We store all of the retrieved data inside of an object called "response"
+                url: timezoneURL,
+                method: "GET"
+            }) // We store all of the retrieved data inside of an object called "response"
                 .then(function (response) {
                     timeOffset = response.dstOffset + response.rawOffset;
                     locationTimezone = response.timeZoneName;
@@ -169,9 +169,9 @@ function currentWeather(viewingLocation) { //for the current time
 function chanceOfClearSky(viewingLocation) { // queries forecast not current weather removed: units=imperial&
     var forecastqueryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + viewingLocation + "&appid=" + weatherApiKey;
     $.ajax({
-            url: forecastqueryURL,
-            method: "GET"
-        })
+        url: forecastqueryURL,
+        method: "GET"
+    })
         .then(function (response) { //report every *4th* of the 40 weather predictions, each 3h apart, 
 
             var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
@@ -191,7 +191,7 @@ function chanceOfClearSky(viewingLocation) { // queries forecast not current wea
 
                 //The forecast text contains the day of the week and that day's weather
                 var forecastDayText = daysOfWeek[forecastDate.getDay()] + " ";
-                
+
                 var timZon = $("<span>"); //This is the time including a time zone title
                 timZon.attr("title", locationTimezone);
                 timZon.text(list.dt_txt.substring(11))
@@ -327,7 +327,7 @@ var visiblePlanets = {
 // create an object called launchCountdown to hold methods for displaying launch countdown
 var launchCountdown = {
     // method to get data from API
-    getLaunchAPI: function() {
+    getLaunchAPI: function () {
         // assign queryURL to get "next" launch
         var queryURL = "https://launchlibrary.net/1.3/launch/next/1";
         console.log(queryURL);
@@ -335,7 +335,7 @@ var launchCountdown = {
         $.ajax({
             url: queryURL,
             method: "GET"
-        }).then(function(response) {
+        }).then(function (response) {
             console.log(response);
             // results var to store data
             var launchResults = response.launches[0];
@@ -357,16 +357,16 @@ var launchCountdown = {
             // name url var
             var launchNameURL = launchResults.rocket.wikiURL;
             // append text/link
-            $("#launchName").append("Rocket name: <a href='" + launchNameURL +"'>" + launchName + "<br>");
-            
+            $("#launchName").append("Rocket name: <a href='" + launchNameURL + "'>" + launchName + "<br>");
+
             // agency var
             var agencyName = launchResults.rocket.agencies[0]["name"];
             // agency url
             var agencyNameURL = launchResults.rocket.agencies[0]["wikiURL"];
             // append text/link
-            $("#launchName").append("Launch agency: <a href='" + agencyNameURL +"'>" + agencyName + "<br>");
+            $("#launchName").append("Launch agency: <a href='" + agencyNameURL + "'>" + agencyName + "<br>");
             console.log(agencyName)
-            
+
             // location var
             var launchLocation = launchResults.location.name;
             console.log(launchLocation);
@@ -374,16 +374,83 @@ var launchCountdown = {
             var launchLocationURL = launchResults.location.pads[0]["mapURL"];
             console.log(launchLocationURL);
             // append text/link
-            $("#launchName").append("Launch location: <a href='" + launchLocationURL +"'>" + launchLocation + "<br>");
+            $("#launchName").append("Launch location: <a href='" + launchLocationURL + "'>" + launchLocation + "<br>");
 
 
 
         })
+    },
+    // method for blastoff button
+    blastOff: function () {
+        // initialize url array
+        var launchVidURLs = [];
+        // initialize ids array
+        var launchIDs = [];
+        // initialize total var
+        var total;
+
+        // use currentDate to get a range of launches
+        // get yesterday's date in YYYY-MM-DD
+        console.log(d);
+        var yesterday = d.setDate(d.getDate() - 1);
+        // get 6 months ago from yesterday date
+        var sixMonths = d.setDate(d.getDate() - 181);
+        // reset d
+        d = new Date();
+        // format dates
+        var formatYesterday = moment(yesterday).format("YYYY-MM-DD");
+        var formatSixMonths = moment(sixMonths).format("YYYY-MM-DD");
+        console.log(formatYesterday);
+        console.log(formatSixMonths);
+
+        // create queryURL in the form of https://launchlibrary.net/1.3/launch?startdate=formatSixMonths&enddate=formatYesterday
+        var queryURL = "https://launchlibrary.net/1.3/launch?startdate=" + formatSixMonths + "&enddate=" + formatYesterday;
+        console.log(queryURL);
+        // then ajax call
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).then(function (response) {
+            console.log(response);
+            // update total
+            total = response.total;
+
+            // create next queryURL in the form of https://launchlibrary.net/1.3/launch?startdate=formatSixMonths&enddate=formatYesterday&limit=total
+            console.log(total);
+            var queryURLLimit = queryURL + "&limit=" + total;
+            console.log(queryURLLimit);
+
+            // then ajax call
+            $.ajax({
+                url: queryURLLimit,
+                method: "GET"
+            }).then(function (response) {
+                console.log(response);
+                console.log(response.launches.length)
+                // loop through response pushing IDs
+                for (i = 0; i < response.launches.length - 1; i++) {
+                    launchIDs.push(response.launches[i]["id"]);
+                }
+                console.log(launchIDs)
+
+                // pick a random ID from the Array
+                var randomID = launchIDs[Math.floor(Math.random() * launchIDs.length)];
+                console.log(randomID);
+
+                // create next queryURL using randomID
+                var queryURLID = "https://launchlibrary.net/1.3/launch/" + randomID;
+                console.log(queryURLID);
+
+                // then ajax call
+                $.ajax({
+                    url: queryURLID,
+                    method: "GET"
+                }).then(function (response) {
+                    console.log(response);
+                })
+            })
+        })
     }
-    // first get browser date
-
-
-
 }
 
 //-------Once the page loads, execute these functions--------------------------\\
@@ -439,5 +506,9 @@ $(document).ready(function () {
         } else { // display please try again
             alert("The location entered is not valid");
         }
+    })
+    //When the user clicks the search button
+    $(document).on("click", "#blastOff", function () {
+        launchCountdown.blastOff();
     })
 });
