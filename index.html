@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>SpaceHub</title>
 
-    <!-- Link to Boostrap -->
+    <!-- Link to Bootstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
         crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -69,7 +69,7 @@
             <!-- Page Title -->
             <div class="row">
                 <div class="col">
-                    <h1 class="display-4">Astronomical Event Search</h1>
+                    <h1>Astronomical Event Search</h1>
                 </div>
             </div>
 
@@ -145,7 +145,7 @@
 
                 <!-- Visibility Data Column -->
                 <div class="col-md-6 visibility">
-                    <h3>Planetary visibility</h3>
+                    <h2 class="text-center">PLANETARY VISIBILITY</h2>
                     <div id="visibility"></div>
                 </div>
 
@@ -153,8 +153,8 @@
                 <div class="col-md-6 weather">
                     <div class="row">
                         <div class="col">
-                            <h3>Weather cooperability</h3>
-                            <div id="current-weather" >
+                            <h2 class="text-center">WEATHER FORECAST</h2>
+                            <div id="current-weather">
                             </div>
                             <div id="forecast-weather">
                             </div>
@@ -167,31 +167,47 @@
             <!-- End of Search Results -->
 
             <!-- row for launch countdown -->
-            <div class = "row mt-3">
-                <div class ="col-12">
+            <div class="row mt-3">
+                <div class="col-12">
                     <!-- header -->
-                    <h1 class="text-center">NEXT ROCKET LAUNCH COUNTDOWN</h1>
-                    <!-- TimeCircles div -->
-                    <div class="launch" data-date="2018-09-01 00:00:00">
+                    <h2 class="text-center">NEXT ROCKET LAUNCH COUNTDOWN</h1>
+                        <!-- TimeCircles div -->
+                        <div class="launch" data-date="2018-09-01 00:00:00">
 
-                    </div>
-                    <!-- rocket name -->
-                    <h4 class="text-center" id="launchName"></h4>
-                    <!-- space agency-->
+                        </div>
+                        <!-- rocket name -->
+                        <p class="text-center launch-info" id="launchName"></p>
+                        <!-- space agency-->
                 </div>
             </div>
-                    <!--Metror Showers------->
-            <div class = "row">
+
+            <!-- Blast Off Area -->
+            <div class="row">
+                <div class="mx-auto">
+                    <button type="button" class="btn btn-warning mt-2" id="blastOff">BLAST OFF</button>
+                </div>
+            </div>
+            <div class="row d-none" id="blastOffRow">
+                <div class="col-12">
+                    <div class="embed-responsive embed-responsive-16by9 mt-3">
+                        <iframe class="embed-responsive-item" id="blastOffVideo" src=""></iframe>
+                    </div>
+                </div>
+            </div>
+            <!-- End of Blast Off Area -->
+
+            <!--Meteor Showers Area-->
+            <div class="row">
                 <div id="meteorShowers" class="col-12">
-                     <h1 class="text-center">NEXT 2018 Meteor Showers</h1>
-                     <br>
-                 </div>
-             </div>
+                    <h2 class="text-center">NEXT 2018 METEOR SHOWERS</h2>
+                    <br>
+                </div>
+            </div>
 
             <!-- Picture of the Day Area -->
             <div class="row mt-3">
                 <div class="col">
-                    <h3>NASA's Astronomy Media of the Day</h3>
+                    <h2 class="text-center">NASA'S ASTRONOMY MEDIA OF THE DAY</h2>
                 </div>
             </div>
             <div class="row">
