@@ -395,25 +395,36 @@ var launchCountdown = {
             var launchName = launchResults.name
             // name url var
             var launchNameURL = launchResults.rocket.wikiURL;
+
             // append text/link
-            $("#launchName").append("Rocket name: <a href='" + launchNameURL + "'>" + launchName + "<br>");
+            var launchNameParagraph = $("<p>");
+            launchNameParagraph.addClass("launch-info");
+            launchNameHTML = "Rocket name: <a href='" + launchNameURL + "'>" + launchName;
+            launchNameParagraph.append(launchNameHTML);
+             $("#launchName").append(launchNameParagraph);
 
             // agency var
             var agencyName = launchResults.rocket.agencies[0]["name"];
             // agency url
             var agencyNameURL = launchResults.rocket.agencies[0]["wikiURL"];
             // append text/link
-            $("#launchName").append("Launch agency: <a href='" + agencyNameURL + "'>" + agencyName + "<br>");
-            console.log(agencyName)
+            var agencyNameParagraph = $("<p>");
+            agencyNameParagraph.addClass("launch-info");
+            agencyNameHTML = "Launch agency: <a href='" + agencyNameURL + "'>" + agencyName;
+            agencyNameParagraph.append(agencyNameHTML);
+             $("#launchName").append(agencyNameParagraph);
 
             // location var
             var launchLocation = launchResults.location.name;
-            console.log(launchLocation);
             // map to location
             var launchLocationURL = launchResults.location.pads[0]["mapURL"];
-            console.log(launchLocationURL);
             // append text/link
-            $("#launchName").append("Launch location: <a href='" + launchLocationURL + "'>" + launchLocation + "<br>");
+            var launchLocationParagraph = $("<p>");
+            launchLocationParagraph.addClass("launch-info");
+            launchLocationHTML = "Launch location: <a href='" + launchLocationURL + "'>" + launchLocation;
+            launchLocationParagraph.append(launchLocationHTML);
+             $("#launchName").append(launchLocationParagraph);
+            // $("#launchName").append("<p>Launch location: <a href='" + launchLocationURL + "'>" + launchLocation + "<p>");
 
 
 
