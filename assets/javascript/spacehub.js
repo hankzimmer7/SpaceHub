@@ -18,6 +18,8 @@ var convertUnix;
 
 // Variable for storing the date the user entered
 var userDate;
+// Variable for storing the current date
+var currentDate;
 
 //Variable for sotring the weather API key
 var weatherApiKey = "166a433c57516f51dfab1f7edaed8413";
@@ -60,6 +62,11 @@ function showSlides() {
 function showDate() {
     userDate = moment().format('YYYY-MM-DD');
     $("#date-input").val(userDate);
+}
+
+//Function to store the current date
+function currentDate() {
+    currentDate = moment().format('YYYY-MM-DD');
 }
 
 //Function to convert the input data
@@ -248,83 +255,50 @@ function futureWeather(viewingLocation) { // queries forecast not current weathe
                 }
             } //end for loop
         }); //end ajax call
-} // end futureWeather function
-
-// Function to display one day's forecast data
-// function oneDaysWeather(viewingDate, viewingLocation) { // queries forecast not current weather removed: units=imperial&
-//     var forecastqueryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + viewingLocation + "&appid=" + weatherApiKey;
-//     $.ajax({
-//         url: forecastqueryURL,
-//         method: "GET"
-//     })
-//         .then(function (response) { //report every *4th* of the 40 weather predictions, each 3h apart, 
-
-//             var fw = $("#forecast-weather");
-//             fw.empty();
-//             fw.text("Weather for " + viewingDate)
-// for (i = 0; i < 5; i++) {
-// i=0 is early morning, or 3am.
-// i=1 is dawn, or 6am
-// i=2 is dusk, or 6pm
-// i=3 is evening, or 9pm
-// i=4 is night, or midnight
-// dawn and dusk are skewed for higher latitude values
-// however, this covers a large percentage of the world's population
 
 
+} // end chanceOfClearSky function
 
-// math is needed here. 40 array elements are returned. Which ones do we display?
+//Function to display NASA's Astronomy Picture of the Day
+function displayPicOfDay() {
+    var APIkey = "SB90oSEABnIVxulKWWm9a8gH7Eq7RyQgYAZCjKE1";
+    var queryURL = "https://api.nasa.gov/planetary/apod?api_key=" + APIkey;
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).then(function (response) {
+        $("#pic-of-day").empty();
+        var imgUrl = response.url;
+        var urlExtension = imgUrl.split('.').pop();
+
+        // If the picture of the day is an image, use an image tag
+        if (urlExtension === "jpg") {
+            var dayPic = $("<img>");
+            dayPic.addClass("img-fluid");
+            dayPic.attr("src", imgUrl);
+            dayPic.attr("alt", "Pic of Day");
+        }
+
+        //If the picture of the day is a video, use an iframe
+        else {
+            $("#pic-of-day").addClass("embed-responsive embed-responsive-16by9");
+            var dayPic = $("<iframe>");
+            dayPic.addClass("embed-responsive-item");
+            dayPic.attr("src", imgUrl);
+            dayPic.attr("alt", "Pic of Day");
+        }
+
+        //Append the pic of the day to the page
+        $("#pic-of-day").append(dayPic);
+    })
+};
 
 
-// var list = response.list[weatherPeriod];
-// var forecastDate = new Date(list.dt * 1000); //convert unix to JS.
-// // From the API doc https://openweathermap.org/forecast5#JSON, 
-// // list.dt returns the ***Time of data forecasted, unix, UTC***
+// Function to convert youtube to embed format
+function createYouTubeEmbedLink(link) {
+    return link.replace("https://www.youtube.com/watch?v=", "https://www.youtube.com/embed/");
+}
 
-// //Create a paragraph to store the forecast statement
-// var forecastParagraph = $("<p>");
-// // forecastParagraph.attr("item-number", i);
-// forecastParagraph.attr("id", "item-" + i);
-
-// //The forecast text contains the day of the week and that day's weather
-// var forecastDayText = daysOfWeek[forecastDate.getDay()] + " ";
-
-// var timZon = $("<span>"); //This is the time including a time zone title
-// timZon.attr("title", locationTimezone);
-// timZon.text(list.dt_txt.substring(11))
-// fw.append(timZon); //append the time
-
-// var forecastWeatherText = " " + list.weather[0].description;
-
-// //Add the forecast text to the paragraph
-// forecastParagraph.text(forecastDayText);
-// forecastParagraph.append(timZon);
-// forecastParagraph.append(forecastWeatherText);
-
-// //Append the forecast statement to the forecast weather section of the page
-// fw.append(forecastParagraph);
-
-// //Target the most recently created element
-// target = "#item-" + i;
-
-// //If i is odd, have the forecast fly in from the left
-// if (i % 2 == 0) {
-//     anime({
-//         targets: target,
-//         translateX: [-500, 0],
-//     });
-// }
-
-// //If i is even, have the forecast fly in from the right
-// else {
-//     anime({
-//         targets: target,
-//         translateX: [500, 0],
-//     });
-//                 } // end if statement
-//             } // end for loop
-//         }); // end ajax call
-// } // end oneDaysWeather function
 
 //-------- Objects and methods ---------------------------------------------\\
 
@@ -420,6 +394,154 @@ var visiblePlanets = {
     }
 }
 
+// create an object called launchCountdown to hold methods for displaying launch countdown
+var launchCountdown = {
+    // method to get data from API
+    getLaunchAPI: function () {
+        // assign queryURL to get "next" launch
+        var queryURL = "https://launchlibrary.net/1.3/launch/next/1";
+        console.log(queryURL);
+        // then ajax call
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).then(function (response) {
+            console.log(response);
+            // results var to store data
+            var launchResults = response.launches[0];
+            console.log(launchResults);
+            // launchdate var
+            var launchDate = launchResults.isostart;
+            console.log(launchDate);
+
+            // convert launch date to correct format for TimeCircles
+            var formatDate = moment(launchDate).format("YYYY-MM-DD hh:mm:ss");
+            console.log(formatDate);
+            // edit data-date attribute
+            $(".launch").attr("data-date", formatDate);
+            // push date to TimeCircles
+            $(".launch").TimeCircles();
+
+            // name var
+            var launchName = launchResults.name
+            // name url var
+            var launchNameURL = launchResults.rocket.wikiURL;
+            // append text/link
+            $("#launchName").append("Rocket name: <a href='" + launchNameURL + "'>" + launchName + "<br>");
+
+            // agency var
+            var agencyName = launchResults.rocket.agencies[0]["name"];
+            // agency url
+            var agencyNameURL = launchResults.rocket.agencies[0]["wikiURL"];
+            // append text/link
+            $("#launchName").append("Launch agency: <a href='" + agencyNameURL + "'>" + agencyName + "<br>");
+            console.log(agencyName)
+
+            // location var
+            var launchLocation = launchResults.location.name;
+            console.log(launchLocation);
+            // map to location
+            var launchLocationURL = launchResults.location.pads[0]["mapURL"];
+            console.log(launchLocationURL);
+            // append text/link
+            $("#launchName").append("Launch location: <a href='" + launchLocationURL + "'>" + launchLocation + "<br>");
+
+
+
+        })
+    },
+    // method for blastoff button
+    blastOff: function () {
+        // initialize url array
+        var launchVidURLs = [];
+        // initialize ids array
+        var launchIDs = [];
+        // initialize total var
+        var total;
+
+        // use currentDate to get a range of launches
+        // get yesterday's date in YYYY-MM-DD
+        console.log(d);
+        var yesterday = d.setDate(d.getDate() - 1);
+        // get 6 months ago from yesterday date
+        var sixMonths = d.setDate(d.getDate() - 181);
+        // reset d
+        d = new Date();
+        // format dates
+        var formatYesterday = moment(yesterday).format("YYYY-MM-DD");
+        var formatSixMonths = moment(sixMonths).format("YYYY-MM-DD");
+        console.log(formatYesterday);
+        console.log(formatSixMonths);
+
+        // create queryURL in the form of https://launchlibrary.net/1.3/launch?startdate=formatSixMonths&enddate=formatYesterday
+        var queryURL = "https://launchlibrary.net/1.3/launch?startdate=" + formatSixMonths + "&enddate=" + formatYesterday;
+        console.log(queryURL);
+        // then ajax call
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).then(function (response) {
+            console.log(response);
+            // update total
+            total = response.total;
+
+            // create next queryURL in the form of https://launchlibrary.net/1.3/launch?startdate=formatSixMonths&enddate=formatYesterday&limit=total
+            console.log(total);
+            var queryURLLimit = queryURL + "&limit=" + total;
+            console.log(queryURLLimit);
+
+            // then ajax call
+            $.ajax({
+                url: queryURLLimit,
+                method: "GET"
+            }).then(function (response) {
+                console.log(response);
+                console.log(response.launches.length)
+                // loop through response pushing IDs
+                for (i = 0; i < response.launches.length - 1; i++) {
+                    launchIDs.push(response.launches[i]["id"]);
+                }
+                console.log(launchIDs)
+
+                // pick a random ID from the Array
+                var randomID = launchIDs[Math.floor(Math.random() * launchIDs.length)];
+                console.log(randomID);
+
+                // create next queryURL using randomID
+                var queryURLID = "https://launchlibrary.net/1.3/launch/" + randomID;
+                console.log(queryURLID);
+
+                // then ajax call
+                $.ajax({
+                    url: queryURLID,
+                    method: "GET"
+                }).then(function (response) {
+                    console.log(response);
+                    // store vidsURLs
+                    var vidURLsArray = response.launches[0]["vidURLs"]
+                    console.log(vidURLsArray);
+                    // check if vidURLsArray is not null
+                    if (vidURLsArray !== null) {
+                        // pick a random url
+                        var randomVidURL = vidURLsArray[Math.floor(Math.random() * vidURLsArray.length)];
+                        // convert URL to embed URL
+                        var randomEmbedSRC = createYouTubeEmbedLink(randomVidURL);
+                        // edit attributes to show on page
+                        $("#blastOffRow").toggleClass("d-none", false);
+                        $("#blastOffVideo").attr("src", randomEmbedSRC);
+                    }
+                    // otherwise get new value
+                    else {
+                        launchCountdown.blastOff();
+                    }
+                    // push URL to embeded youtube div
+
+                })
+            })
+        })
+    }
+}
+
 //-------Once the page loads, execute these functions--------------------------\\
 $(document).ready(function () {
 
@@ -438,9 +560,20 @@ $(document).ready(function () {
     getLocation();
     showDate();
 
-    //Display the planetary visibility & weather
+
+    // store the currentDate
+    currentDate();
+
+    //Display the planetary visibility
+
     visiblePlanets.displayVisibility();
     
+
+    // Display the launch countdown
+    launchCountdown.getLaunchAPI();
+
+    //Display NASA's astronomy picture of the day
+    displayPicOfDay();
 
     //When the user clicks the search button
     $(document).on("click", "#search-button", function () {
@@ -451,6 +584,11 @@ $(document).ready(function () {
         //Get the date that the user selected
         userDate = $("#date-input").val();
         convertInputDate();
+
+
+        visiblePlanets.displayVisibility();
+
+
 
         //Get the location that the user typed in
         inputLocation = $("#location-input").val();
@@ -471,4 +609,10 @@ $(document).ready(function () {
             alert("The location entered is not valid");
         }
     })
+
+    //When the user clicks the Blast Off button
+    $(document).on("click", "#blastOff", function () {
+        launchCountdown.blastOff();
+    })
+    
 });
