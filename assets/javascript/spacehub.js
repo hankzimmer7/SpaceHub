@@ -343,6 +343,7 @@ var launchCountdown = {
             // launchdate var
             var launchDate = launchResults.isostart;
             console.log(launchDate);
+
             // convert launch date to correct format for TimeCircles
             var formatDate = moment(launchDate).format("YYYY-MM-DD hh:mm:ss");
             console.log(formatDate);
@@ -356,14 +357,14 @@ var launchCountdown = {
             // name url var
             var launchNameURL = launchResults.rocket.wikiURL;
             // append text/link
-            $("#launchName").append("<a href='" + launchNameURL +"'>Rocket name: " + launchName + "<br>");
+            $("#launchName").append("Rocket name: <a href='" + launchNameURL +"'>" + launchName + "<br>");
             
             // agency var
             var agencyName = launchResults.rocket.agencies[0]["name"];
             // agency url
             var agencyNameURL = launchResults.rocket.agencies[0]["wikiURL"];
             // append text/link
-            $("#launchName").append("<a href='" + agencyNameURL +"'>Launch agency: " + agencyName + "<br>");
+            $("#launchName").append("Launch agency: <a href='" + agencyNameURL +"'>" + agencyName + "<br>");
             console.log(agencyName)
             
             // location var
@@ -373,7 +374,7 @@ var launchCountdown = {
             var launchLocationURL = launchResults.location.pads[0]["mapURL"];
             console.log(launchLocationURL);
             // append text/link
-            $("#launchName").append("<a href='" + launchLocationURL +"'>Launch location: " + launchLocation + "<br>");
+            $("#launchName").append("Launch location: <a href='" + launchLocationURL +"'>" + launchLocation + "<br>");
 
 
 
