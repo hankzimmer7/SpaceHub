@@ -5,6 +5,9 @@ body {
 h1, p {
     color: rgb(50, 60, 60);
 }
+p {
+    line-height: 0.5rem;
+}
 form {
     margin-bottom: 1rem;
 }
