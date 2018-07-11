@@ -103,7 +103,9 @@ function convertToLatLng() {
     }).done(function (response) {
         userLatitude = response.results[0].locations[0].latLng.lat;
         userLongitude = response.results[0].locations[0].latLng.lng;
+        launchCountdown.getLaunchAPI();
     });
+
 }
 
 function dateIsInNextFive() {
@@ -125,7 +127,7 @@ function dateIsInNextFive() {
 function showPosition(position) {
     userLatitude = position.coords.latitude;
     userLongitude = position.coords.longitude;
-
+    launchCountdown.getLaunchAPI();
     reverseGeoUrl = "https://www.mapquestapi.com/geocoding/v1/reverse?key=" + geoApiKey + "&location=" + userLatitude + "," + userLongitude + "&includeRoadMetadata=true&includeNearestIntersection=true";
     $.ajax({
         url: reverseGeoUrl,
@@ -368,6 +370,12 @@ var visiblePlanets = {
                     // Append paragraph to visibility section of page
                     $("#visibility").append(paragraph);
 
+                    anime({
+                        targets: ("#visibility"),
+                        translateX: [400, 0],
+                    });
+
+
                 } else {
                     // display nothing if not visible
                     $("#visibility").append();
@@ -415,17 +423,13 @@ var launchCountdown = {
             url: queryURL,
             method: "GET"
         }).then(function (response) {
-            // console.log(response);
             // results var to store data
             var launchResults = response.launches[0];
-            // console.log(launchResults);
             // launchdate var
             var launchDate = launchResults.isostart;
-            // console.log(launchDate);
 
             // convert launch date to correct format for TimeCircles
             var formatDate = moment(launchDate).format("YYYY-MM-DD hh:mm:ss");
-            // console.log(formatDate);
             // edit data-date attribute
             $(".launch").attr("data-date", formatDate);
             // push date to TimeCircles
@@ -436,34 +440,47 @@ var launchCountdown = {
             // name url var
             var launchNameURL = launchResults.rocket.wikiURL;
             // append text/link
-            $("#launchName").append("Rocket name: <a href='" + launchNameURL + "'>" + launchName + "<br>");
+            var launchNameParagraph = $("<p>");
+            launchNameParagraph.addClass("launch-info");
+            launchNameHTML = "Rocket name: <a target='_blank' href='" + launchNameURL + "'>" + launchName;
+            launchNameParagraph.append(launchNameHTML);
+            $("#launchName").append(launchNameParagraph);
 
             // agency var
             var agencyName = launchResults.rocket.agencies[0]["name"];
             // agency url
             var agencyNameURL = launchResults.rocket.agencies[0]["wikiURL"];
             // append text/link
-            $("#launchName").append("Launch agency: <a href='" + agencyNameURL + "'>" + agencyName + "<br>");
-            // console.log(agencyName)
+            var agencyNameParagraph = $("<p>");
+            agencyNameParagraph.addClass("launch-info");
+            agencyNameHTML = "Launch agency: <a target='_blank' href='" + agencyNameURL + "'>" + agencyName;
+            agencyNameParagraph.append(agencyNameHTML);
+            $("#launchName").append(agencyNameParagraph);
 
             // location var
             var launchLocation = launchResults.location.name;
-            // console.log(launchLocation);
             // map to location
             var launchLocationURL = launchResults.location.pads[0]["mapURL"];
             // lat and long
             var launchLat = launchResults.location.pads[0]["latitude"];
             var launchLong = launchResults.location.pads[0]["longitude"];
+
             // call latLongDistance
             latLongDistance(userLatitude, userLongitude, launchLat, launchLong);
-            // console.log(distLaunch)
-            // console.log(userLatitude);
-            // console.log(userLongitude);
             // append text/link
+            var launchLocationParagraph = $("<p>");
+            launchLocationParagraph.addClass("launch-info");
+            launchLocationHTML = "Launch location: <a target='_blank' href='" + launchLocationURL + "'>" + launchLocation;
+            launchLocationParagraph.append(launchLocationHTML);
+            $("#launchName").append(launchLocationParagraph);
+
+            var launchDistanceParagraph = $("<p>");
+            launchDistanceParagraph.addClass("launch-info");
+            launchDistanceHTML = distLaunch + " miles from location";
+            launchDistanceParagraph.append(launchDistanceHTML);
+
             if (userLatitude && userLongitude) {
-                $("#launchName").append("Launch location: <a href='" + launchLocationURL + "'>" + launchLocation + "</a><br>" + distLaunch + " miles from location");
-            } else {
-                $("#launchName").append("Launch location: <a href='" + launchLocationURL + "'>" + launchLocation + "<br>");
+                $("#launchName").append(launchDistanceParagraph);
             }
         })
     },
@@ -572,7 +589,7 @@ $(document).ready(function () {
 
     //Have the title fly in from the right
     anime({
-        targets: '.display-4',
+        targets: 'h1',
         translateX: [500, 0],
         duration: 1000,
         easing: 'easeInOutQuart'
@@ -592,7 +609,6 @@ $(document).ready(function () {
     visiblePlanets.displayVisibility();
 
     // Display the launch countdown
-    launchCountdown.getLaunchAPI();
 
     //Display NASA's astronomy picture of the day
     displayPicOfDay();
@@ -620,13 +636,11 @@ $(document).ready(function () {
         //If the user's input is a valid location
         if (locationIsValid(inputLocation) === true) {
 
-            //Populate the weather area with weather information
-            currentWeather(inputLocation);
+            dateIsInNextFive();
 
         } else { // display please try again
             alert("The location entered is not valid");
         }
-        launchCountdown.getLaunchAPI();
     })
 
     //When the user clicks the Blast Off button
