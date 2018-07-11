@@ -99,13 +99,15 @@ function convertToLatLng() {
 
 function dateIsInNextFive(viewingDate) {
     var foo = new Date();
+    foo = viewingDate;
+    // console.log("get time " + foo.getTime());
     console.log("viewingDate is " + viewingDate);
     console.log(foo)
     if (0 < 5) { //math says it's within five)
         return true;
     }
     else {
-        return false 
+        return false
     } // end if else
 } // end dateIsInNextFive
 
@@ -123,6 +125,7 @@ function showPosition(position) {
             "," + response.results[0].locations[0].adminArea3 +
             "," + response.results[0].locations[0].adminArea1;
         $("#location-input").val(inputLocation);
+        currentWeather(inputLocation); // also calls the GMaps timezone ajax, then the futureWeather ajax
     });
 }
 
@@ -164,6 +167,8 @@ function currentWeather(viewingLocation) { //for the current time
             }) // We store all of the retrieved data inside of an object called "response"
                 .then(function (response) {
                     timeOffset = response.dstOffset + response.rawOffset;
+                    console.log(response);
+                    console.log("timeOffset is " + timeOffset)
                     locationTimezone = response.timeZoneName;
                     futureWeather(viewingLocation);
                 }); //end GMaps ajax 
@@ -199,7 +204,7 @@ function futureWeather(viewingLocation) { // queries forecast not current weathe
 
                 var timZon = $("<span>"); //This is the time including a time zone title
                 timZon.attr("title", locationTimezone);
-                timZon.text(list.dt_txt.substring(11))
+                timZon.text(list.dt_txt.substring(11)); // We DID NOT incorporate timeOffset variable! -Brett's bad
                 fw.append(timZon); //append the time
 
                 var forecastWeatherText = " " + list.weather[0].description;
@@ -235,80 +240,80 @@ function futureWeather(viewingLocation) { // queries forecast not current weathe
 } // end futureWeather function
 
 // Function to display one day's forecast data
-function oneDaysWeather(viewingDate, viewingLocation) { // queries forecast not current weather removed: units=imperial&
-    var forecastqueryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + viewingLocation + "&appid=" + weatherApiKey;
-    $.ajax({
-        url: forecastqueryURL,
-        method: "GET"
-    })
-        .then(function (response) { //report every *4th* of the 40 weather predictions, each 3h apart, 
+// function oneDaysWeather(viewingDate, viewingLocation) { // queries forecast not current weather removed: units=imperial&
+//     var forecastqueryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + viewingLocation + "&appid=" + weatherApiKey;
+//     $.ajax({
+//         url: forecastqueryURL,
+//         method: "GET"
+//     })
+//         .then(function (response) { //report every *4th* of the 40 weather predictions, each 3h apart, 
 
-            var fw = $("#forecast-weather");
-            fw.empty();
-            fw.text("Weather for " + viewingDate)
-            for (i = 0; i < 5; i++) {
-                // i=0 is early morning, or 3am.
-                // i=1 is dawn, or 6am
-                // i=2 is dusk, or 6pm
-                // i=3 is evening, or 9pm
-                // i=4 is night, or midnight
-                // dawn and dusk are skewed for higher latitude values
-                // however, this covers a large percentage of the world's population
-
-
-
-                // math is needed here. 40 array elements are returned. Which ones do we display?
+//             var fw = $("#forecast-weather");
+//             fw.empty();
+//             fw.text("Weather for " + viewingDate)
+// for (i = 0; i < 5; i++) {
+// i=0 is early morning, or 3am.
+// i=1 is dawn, or 6am
+// i=2 is dusk, or 6pm
+// i=3 is evening, or 9pm
+// i=4 is night, or midnight
+// dawn and dusk are skewed for higher latitude values
+// however, this covers a large percentage of the world's population
 
 
-                var list = response.list[weatherPeriod];
-                var forecastDate = new Date(list.dt * 1000); //convert unix to JS.
-                // From the API doc https://openweathermap.org/forecast5#JSON, 
-                // list.dt returns the ***Time of data forecasted, unix, UTC***
 
-                //Create a paragraph to store the forecast statement
-                var forecastParagraph = $("<p>");
-                // forecastParagraph.attr("item-number", i);
-                forecastParagraph.attr("id", "item-" + i);
+// math is needed here. 40 array elements are returned. Which ones do we display?
 
-                //The forecast text contains the day of the week and that day's weather
-                var forecastDayText = daysOfWeek[forecastDate.getDay()] + " ";
 
-                var timZon = $("<span>"); //This is the time including a time zone title
-                timZon.attr("title", locationTimezone);
-                timZon.text(list.dt_txt.substring(11))
-                fw.append(timZon); //append the time
+// var list = response.list[weatherPeriod];
+// var forecastDate = new Date(list.dt * 1000); //convert unix to JS.
+// // From the API doc https://openweathermap.org/forecast5#JSON, 
+// // list.dt returns the ***Time of data forecasted, unix, UTC***
 
-                var forecastWeatherText = " " + list.weather[0].description;
+// //Create a paragraph to store the forecast statement
+// var forecastParagraph = $("<p>");
+// // forecastParagraph.attr("item-number", i);
+// forecastParagraph.attr("id", "item-" + i);
 
-                //Add the forecast text to the paragraph
-                forecastParagraph.text(forecastDayText);
-                forecastParagraph.append(timZon);
-                forecastParagraph.append(forecastWeatherText);
+// //The forecast text contains the day of the week and that day's weather
+// var forecastDayText = daysOfWeek[forecastDate.getDay()] + " ";
 
-                //Append the forecast statement to the forecast weather section of the page
-                fw.append(forecastParagraph);
+// var timZon = $("<span>"); //This is the time including a time zone title
+// timZon.attr("title", locationTimezone);
+// timZon.text(list.dt_txt.substring(11))
+// fw.append(timZon); //append the time
 
-                //Target the most recently created element
-                target = "#item-" + i;
+// var forecastWeatherText = " " + list.weather[0].description;
 
-                //If i is odd, have the forecast fly in from the left
-                if (i % 2 == 0) {
-                    anime({
-                        targets: target,
-                        translateX: [-500, 0],
-                    });
-                }
+// //Add the forecast text to the paragraph
+// forecastParagraph.text(forecastDayText);
+// forecastParagraph.append(timZon);
+// forecastParagraph.append(forecastWeatherText);
 
-                //If i is even, have the forecast fly in from the right
-                else {
-                    anime({
-                        targets: target,
-                        translateX: [500, 0],
-                    });
-                } // end if statement
-            } // end for loop
-        }); // end ajax call
-} // end oneDaysWeather function
+// //Append the forecast statement to the forecast weather section of the page
+// fw.append(forecastParagraph);
+
+// //Target the most recently created element
+// target = "#item-" + i;
+
+// //If i is odd, have the forecast fly in from the left
+// if (i % 2 == 0) {
+//     anime({
+//         targets: target,
+//         translateX: [-500, 0],
+//     });
+// }
+
+// //If i is even, have the forecast fly in from the right
+// else {
+//     anime({
+//         targets: target,
+//         translateX: [500, 0],
+//     });
+//                 } // end if statement
+//             } // end for loop
+//         }); // end ajax call
+// } // end oneDaysWeather function
 
 //-------- Objects and methods ---------------------------------------------\\
 
@@ -424,7 +429,7 @@ $(document).ready(function () {
 
     //Display the planetary visibility & weather
     visiblePlanets.displayVisibility();
-    currentWeather(inputLocation); // also calls the GMaps timezone ajax, then the futureWeather ajax
+
 
     //When the user clicks the search button
     $(document).on("click", "#search-button", function () {
@@ -447,7 +452,7 @@ $(document).ready(function () {
 
             //Populate the weather area with one day's information
             if (dateIsInNextFive(userDate)) {
-                oneDaysWeather(userDate, inputLocation);
+                // oneDaysWeather(userDate, inputLocation);
             }
 
         } else { // display please try again
