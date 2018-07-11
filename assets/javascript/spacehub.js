@@ -341,11 +341,41 @@ var launchCountdown = {
             var launchResults = response.launches[0];
             console.log(launchResults);
             // launchdate var
-            var launchDate = launchResults.windowstart;
+            var launchDate = launchResults.isostart;
             console.log(launchDate);
+            // convert launch date to correct format for TimeCircles
+            var formatDate = moment(launchDate).format("YYYY-MM-DD hh:mm:ss");
+            console.log(formatDate);
+            // edit data-date attribute
+            $(".launch").attr("data-date", formatDate);
+            // push date to TimeCircles
+            $(".launch").TimeCircles();
+
+            // name var
+            var launchName = launchResults.name
+            // name url var
+            var launchNameURL = launchResults.rocket.wikiURL;
+            // append text/link
+            $("#launchName").append("<a href='" + launchNameURL +"'>Rocket name: " + launchName + "<br>");
+            
+            // agency var
+            var agencyName = launchResults.rocket.agencies[0]["name"];
+            // agency url
+            var agencyNameURL = launchResults.rocket.agencies[0]["wikiURL"];
+            // append text/link
+            $("#launchName").append("<a href='" + agencyNameURL +"'>Launch agency: " + agencyName + "<br>");
+            console.log(agencyName)
+            
             // location var
             var launchLocation = launchResults.location.name;
             console.log(launchLocation);
+            // map to location
+            var launchLocationURL = launchResults.location.pads[0]["mapURL"];
+            console.log(launchLocationURL);
+            // append text/link
+            $("#launchName").append("<a href='" + launchLocationURL +"'>Launch location: " + launchLocation + "<br>");
+
+
 
         })
     }
