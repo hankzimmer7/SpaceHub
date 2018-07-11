@@ -120,7 +120,7 @@ function dateIsInNextFive() {
     } else {
         var datesBetween = convertUnix - d.getTime() / 1000;
         if (datesBetween > 5 * 24 * 60 * 60) {
-            $("#forecast-weather").text("Weather forecast available only for the next five days");
+            $("#forecast-weather").html("<p>The weather forecast is available only for the next five days.<p>");
         } else {
             oneDaysWeather();	
         }
