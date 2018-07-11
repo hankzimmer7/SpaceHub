@@ -122,15 +122,26 @@ function showPosition(position) {
     });
 }
 
-// Function to calculate diatance between two lang long pairs (from: https://andrew.hedges.name/experiments/haversine/)
+// Function to calculate diatance between two lang long pairs and convert degrees to radians
+// (from:https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula)
+// distance function
 function latLongDistance(lat1, lon1, lat2, lon2) {
-    dlon = lon2 - lon1; 
-    dlat = lat2 - lat1; 
-    aVal = (sin(dlat/2))^2 + cos(lat1) * cos(lat2) * (sin(dlon/2))^2; 
-    cVal = 2 * atan2( sqrt(aVal), sqrt(1-aVal) ); 
-    distLaunch = 3961 * cVal;
+    var R = 3959; // Radius of the earth in miles
+    var dLat = deg2rad(lat2 - lat1);  // deg2rad below
+    var dLon = deg2rad(lon2 - lon1);
+    var aVal =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2)
+        ;
+    var cVal = 2 * Math.atan2(Math.sqrt(aVal), Math.sqrt(1 - aVal));
+    var dVal = R * cVal; // Distance in km
+    distLaunch = dVal
 }
-
+// degrees to radians function
+function deg2rad(deg) {
+    return deg * (Math.PI / 180)
+}
 
 //Function to display the current weather information
 function currentWeather(viewingLocation) { //for the current time
@@ -426,7 +437,7 @@ var launchCountdown = {
             var launchLat = launchResults.location.pads[0]["latitude"];
             var launchLong = launchResults.location.pads[0]["longitude"];
             // call latLongDistance
-            latLongDistance(userLatitude, userLongitude, launchLat, launchLong);
+            latLongDistance(0, 0, launchLat, launchLong);
             console.log(distLaunch);
             // append text/link
             $("#launchName").append("Launch location: <a href='" + launchLocationURL + "'>" + launchLocation + "<br>");
@@ -598,8 +609,8 @@ $(document).ready(function () {
     })
 
     //Redraw the time circles when the page is resized
-    $(window).resize(function(){
+    $(window).resize(function () {
         $(".launch").TimeCircles().rebuild();
     });
-    
+
 });
