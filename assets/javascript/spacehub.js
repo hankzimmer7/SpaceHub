@@ -14,6 +14,7 @@ var geoApiKey = "vIThotHxCdFMxbA7OSxbY4kmK0bOGSBg";
 var GMapsKey = "AIzaSyBGEg1nWHjxTxBD48-AkHMm0QV_TVn0S50";
 var timeOffset = 0;
 var locationTimezone = "";
+var convertUnix;
 
 // Variable for storing the date the user entered
 var userDate;
@@ -33,6 +34,7 @@ var d = new Date();
 var year = d.getFullYear();
 // store month
 var month = d.getMonth();
+
 // month names
 var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "november", "december"];
 
@@ -104,6 +106,23 @@ function convertToLatLng() {
     });
 }
 
+function dateIsInNextFive() {
+  convertUnix = moment(userDate,'YYYY,MM,DD').unix();
+if(((convertUnix < d.getTime()/1000)&&((d.getTime()/1000 - convertUnix)>24*60*60))){
+    $("#forecast-weather").text("Your date is in the past");
+}
+else{
+   var datesBetween = convertUnix-d.getTime()/1000;
+   if (datesBetween > 5*24*60*60 ){
+       $("#forecast-weather").text("Weather forecast available only for the next five days");
+   }
+  else{
+      //oneDaysWeather();
+      currentWeather(inputLocation);
+  }
+}
+} // end dateIsInNextFive
+
 //Function to show the user's location
 function showPosition(position) {
     userLatitude = position.coords.latitude;
@@ -118,11 +137,12 @@ function showPosition(position) {
             "," + response.results[0].locations[0].adminArea3 +
             "," + response.results[0].locations[0].adminArea1;
         $("#location-input").val(inputLocation);
+        currentWeather(inputLocation); // also calls the GMaps timezone ajax, then the futureWeather ajax
     });
 }
 
 //Function to display the current weather information
-function currentWeather(viewingLocation) { //for the current time
+function currentWeather(viewingLocation) { 
     // TBD programmatically. Set the location that will be used in the function calls
     var weatherqueryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + viewingLocation + "&units=imperial&appid=" + weatherApiKey;
     $.ajax({
@@ -160,21 +180,20 @@ function currentWeather(viewingLocation) { //for the current time
                 .then(function (response) {
                     timeOffset = response.dstOffset + response.rawOffset;
                     locationTimezone = response.timeZoneName;
-                    chanceOfClearSky(viewingLocation);
+                    futureWeather(viewingLocation);
                 }); //end GMaps ajax 
         }); //end Weather ajax function
 } // end current weather function
 
 // Function to display the future weather forecast data
-function chanceOfClearSky(viewingLocation) { // queries forecast not current weather removed: units=imperial&
+function futureWeather(viewingLocation) { // queries forecast not current weather removed: units=imperial&
     var forecastqueryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + viewingLocation + "&appid=" + weatherApiKey;
     $.ajax({
         url: forecastqueryURL,
         method: "GET"
     })
         .then(function (response) { //report every *4th* of the 40 weather predictions, each 3h apart, 
-
-            var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+            var daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
             var fw = $("#forecast-weather");
             fw.empty();
             for (i = 0; i < 10; i++) {
@@ -194,7 +213,7 @@ function chanceOfClearSky(viewingLocation) { // queries forecast not current wea
 
                 var timZon = $("<span>"); //This is the time including a time zone title
                 timZon.attr("title", locationTimezone);
-                timZon.text(list.dt_txt.substring(11))
+                timZon.text(list.dt_txt.substring(11)); // We DID NOT incorporate timeOffset variable! -Brett's bad
                 fw.append(timZon); //append the time
 
                 var forecastWeatherText = " " + list.weather[0].description;
@@ -225,8 +244,10 @@ function chanceOfClearSky(viewingLocation) { // queries forecast not current wea
                         translateX: [500, 0],
                     });
                 }
-            }
+            } //end for loop
         }); //end ajax call
+
+
 } // end chanceOfClearSky function
 
 //Function to display NASA's Astronomy Picture of the Day
@@ -268,6 +289,7 @@ function displayPicOfDay() {
 function createYouTubeEmbedLink(link) {
     return link.replace("https://www.youtube.com/watch?v=", "https://www.youtube.com/embed/");
 }
+
 
 //-------- Objects and methods ---------------------------------------------\\
 
@@ -369,23 +391,18 @@ var launchCountdown = {
     getLaunchAPI: function () {
         // assign queryURL to get "next" launch
         var queryURL = "https://launchlibrary.net/1.3/launch/next/1";
-        console.log(queryURL);
         // then ajax call
         $.ajax({
             url: queryURL,
             method: "GET"
         }).then(function (response) {
-            console.log(response);
             // results var to store data
             var launchResults = response.launches[0];
-            console.log(launchResults);
             // launchdate var
             var launchDate = launchResults.isostart;
-            console.log(launchDate);
 
             // convert launch date to correct format for TimeCircles
             var formatDate = moment(launchDate).format("YYYY-MM-DD hh:mm:ss");
-            console.log(formatDate);
             // edit data-date attribute
             $(".launch").attr("data-date", formatDate);
             // push date to TimeCircles
@@ -404,14 +421,11 @@ var launchCountdown = {
             var agencyNameURL = launchResults.rocket.agencies[0]["wikiURL"];
             // append text/link
             $("#launchName").append("Launch agency: <a href='" + agencyNameURL + "'>" + agencyName + "<br>");
-            console.log(agencyName)
 
             // location var
             var launchLocation = launchResults.location.name;
-            console.log(launchLocation);
             // map to location
             var launchLocationURL = launchResults.location.pads[0]["mapURL"];
-            console.log(launchLocationURL);
             // append text/link
             $("#launchName").append("Launch location: <a href='" + launchLocationURL + "'>" + launchLocation + "<br>");
 
@@ -430,7 +444,6 @@ var launchCountdown = {
 
         // use currentDate to get a range of launches
         // get yesterday's date in YYYY-MM-DD
-        console.log(d);
         var yesterday = d.setDate(d.getDate() - 1);
         // get 6 months ago from yesterday date
         var sixMonths = d.setDate(d.getDate() - 181);
@@ -439,56 +452,43 @@ var launchCountdown = {
         // format dates
         var formatYesterday = moment(yesterday).format("YYYY-MM-DD");
         var formatSixMonths = moment(sixMonths).format("YYYY-MM-DD");
-        console.log(formatYesterday);
-        console.log(formatSixMonths);
 
         // create queryURL in the form of https://launchlibrary.net/1.3/launch?startdate=formatSixMonths&enddate=formatYesterday
         var queryURL = "https://launchlibrary.net/1.3/launch?startdate=" + formatSixMonths + "&enddate=" + formatYesterday;
-        console.log(queryURL);
         // then ajax call
         $.ajax({
             url: queryURL,
             method: "GET"
         }).then(function (response) {
-            console.log(response);
             // update total
             total = response.total;
 
             // create next queryURL in the form of https://launchlibrary.net/1.3/launch?startdate=formatSixMonths&enddate=formatYesterday&limit=total
-            console.log(total);
             var queryURLLimit = queryURL + "&limit=" + total;
-            console.log(queryURLLimit);
 
             // then ajax call
             $.ajax({
                 url: queryURLLimit,
                 method: "GET"
             }).then(function (response) {
-                console.log(response);
-                console.log(response.launches.length)
                 // loop through response pushing IDs
                 for (i = 0; i < response.launches.length - 1; i++) {
                     launchIDs.push(response.launches[i]["id"]);
                 }
-                console.log(launchIDs)
 
                 // pick a random ID from the Array
                 var randomID = launchIDs[Math.floor(Math.random() * launchIDs.length)];
-                console.log(randomID);
 
                 // create next queryURL using randomID
                 var queryURLID = "https://launchlibrary.net/1.3/launch/" + randomID;
-                console.log(queryURLID);
 
                 // then ajax call
                 $.ajax({
                     url: queryURLID,
                     method: "GET"
                 }).then(function (response) {
-                    console.log(response);
                     // store vidsURLs
                     var vidURLsArray = response.launches[0]["vidURLs"]
-                    console.log(vidURLsArray);
                     // check if vidURLsArray is not null
                     if (vidURLsArray !== null) {
                         // pick a random url
@@ -529,11 +529,14 @@ $(document).ready(function () {
     getLocation();
     showDate();
 
+
     // store the currentDate
     currentDate();
 
     //Display the planetary visibility
+
     visiblePlanets.displayVisibility();
+    
 
     // Display the launch countdown
     launchCountdown.getLaunchAPI();
@@ -551,19 +554,25 @@ $(document).ready(function () {
         userDate = $("#date-input").val();
         convertInputDate();
 
+
         visiblePlanets.displayVisibility();
+
 
 
         //Get the location that the user typed in
         inputLocation = $("#location-input").val();
 
-        convertToLatLng();
+        convertToLatLng(); //what does this do? -BW
+        visiblePlanets.displayVisibility();
 
         //If the user's input is a valid location
         if (locationIsValid(inputLocation) === true) {
-
-            //Populate the weather area with weather information
-            currentWeather(inputLocation);
+            
+            dateIsInNextFive();
+            //Populate the weather area with one day's information
+           // if (dateIsInNextFive(userDate)) {
+                // oneDaysWeather(userDate, inputLocation);
+            //}
 
         } else { // display please try again
             alert("The location entered is not valid");
