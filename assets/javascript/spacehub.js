@@ -122,8 +122,8 @@ else{
        $("#forecast-weather").text("Weather forecast available only for the next five days");
    }
   else{
-      //oneDaysWeather();
-      currentWeather(inputLocation);
+      oneDaysWeather();
+      //currentWeather(inputLocation);
   }
 }
 } // end dateIsInNextFive
@@ -209,6 +209,7 @@ function futureWeather(viewingLocation) { // queries forecast not current weathe
                 var weatherPeriod = i * 4;
                 var list = response.list[weatherPeriod];
                 var forecastDate = new Date(list.dt * 1000); //convert unix to JS.
+                console.log(forecastDate);
                 // From the API doc https://openweathermap.org/forecast5#JSON, 
                 // list.dt returns the ***Time of data forecasted, unix, UTC***
 
@@ -257,7 +258,68 @@ function futureWeather(viewingLocation) { // queries forecast not current weathe
         }); //end ajax call
 
 
-} // end chanceOfClearSky function
+
+} // end futureforecast function
+
+function oneDaysWeather(){
+    $("#current-weather").empty();
+    var forecastqueryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + inputLocation + "&appid=" + weatherApiKey;
+    $.ajax({
+        url: forecastqueryURL,
+        method: "GET"
+    })
+        .then(function (response) { //report every *4th* of the 40 weather predictions, each 3h apart, 
+            $("#forecast-weather").empty();
+            var dateDisplay = $("<p>")
+            dateDisplay.text("On "+ moment(userDate,'YYYY,MM,DD').format("MMM Do YYYY"));
+            $("#forecast-weather").append(dateDisplay);
+
+            var timeInADay= ["6am","9am","6pm","9pm","12am"]
+            for(var i = 0; i<timeInADay.length;i++){
+                var weatherAtTime = weatherInADay(timeInADay[i],response);
+                var weatherDisplay = $("<p>");
+                weatherDisplay.attr("id", "item-" + i);
+                weatherDisplay.text("At "+timeInADay[i]+ ": "+weatherAtTime);
+                $("#forecast-weather").append(weatherDisplay);   
+                //Target the most recently created element
+                target = "#item-" + i;
+
+                //If i is odd, have the forecast fly in from the left
+                if (i % 2 == 0) {
+                    anime({
+                        targets: target,
+                        translateX: [-500, 0],
+                    });
+                }
+
+                //If i is even, have the forecast fly in from the right
+                else {
+                    anime({
+                        targets: target,
+                        translateX: [500, 0],
+                    });
+                }       
+            }
+        })
+};
+
+//Function that return the weather at specific time
+function weatherInADay(time,response){
+    var convertUnixV = moment(userDate+" "+time,'YYYY,MM,DD ha').unix();
+    var differences=[];
+    var difference;
+    for(var i =0; i<40; i++){
+    difference = Math.abs(convertUnixV - response.list[i].dt);
+    differences.push(difference);
+    }
+    var minIndex = 0;
+    for (var j=1; j<differences.length;j++){
+        if(differences[j]<differences[j-1]){
+            minIndex=j;}
+    }
+    var weatherDiscription= response.list[minIndex].weather[0].description;
+    return weatherDiscription;
+}
 
 //Function to display NASA's Astronomy Picture of the Day
 function displayPicOfDay() {
@@ -600,10 +662,7 @@ $(document).ready(function () {
         if (locationIsValid(inputLocation) === true) {
             
             dateIsInNextFive();
-            //Populate the weather area with one day's information
-           // if (dateIsInNextFive(userDate)) {
-                // oneDaysWeather(userDate, inputLocation);
-            //}
+           
 
         } else { // display please try again
             alert("The location entered is not valid");
