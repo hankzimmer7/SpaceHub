@@ -20,6 +20,9 @@
     <!-- Link to jquery (necessary for ajax since 3.3.1 doesn't seem to work) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
+    <!-- link to TimeCircles.js -->
+    <script type="text/javascript" src="assets/javascript/TimeCircles.js"></script>
+
     <!-- Link to Moment.js-->
     <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
 
@@ -28,6 +31,9 @@
 
     <!-- Link to javascript file -->
     <script src="assets/javascript/spacehub.js"></script>
+
+    <!-- link to TimeCircles.css -->
+    <link href="assets/css/TimeCircles.css" rel="stylesheet">
 
     <!-- Link to style sheet file -->
     <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css">
@@ -148,7 +154,7 @@
                     <div class="row">
                         <div class="col">
                             <h3>Weather cooperability</h3>
-                            <div id="current-weather">
+                            <div id="current-weather" >
                             </div>
                             <div id="forecast-weather">
                             </div>
@@ -160,21 +166,33 @@
             </div>
             <!-- End of Search Results -->
 
+            <!-- row for launch countdown -->
+            <div class = "row mt-3">
+                <div class ="col-12">
+                    <!-- header -->
+                    <h1 class="text-center">NEXT ROCKET LAUNCH COUNTDOWN</h1>
+                    <!-- TimeCircles div -->
+                    <div class="launch" data-date="2018-09-01 00:00:00">
+
+                    </div>
+                    <!-- rocket name -->
+                    <h4 class="text-center" id="launchName"></h4>
+                    <!-- space agency-->
+                </div>
+            </div>
+
             <!-- Picture of the Day Area -->
-            <!-- <div class="btn-container"> -->
-            <div class="row">
+            <div class="row mt-3">
                 <div class="col">
-                    <!-- <button type="button" class="btn btn-primary btn-lg btn-block" id="picButton">Picture of Day</button> -->
                     <h3>NASA's Astronomy Picture of the Day</h3>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
-                    <div id="pic-of-day" class="embed-responsive embed-responsive-16by9">
+                    <div id="pic-of-day">
                     </div>
                 </div>
             </div>
-            <!-- </div> -->
             <!-- End of Picture of the Day Area -->
 
         </div>
