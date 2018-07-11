@@ -95,6 +95,9 @@ function locationIsValid(inputLocation) {
 
 //Function to convert inputLocation to latLng
 function convertToLatLng() {
+    console.log(inputLocation);
+    console.log(userLatitude);
+    console.log(userLongitude);
     geoUrl = "https://www.mapquestapi.com/geocoding/v1/address?key=" + geoApiKey + "&location=" + inputLocation;
     $.ajax({
         url: geoUrl,
@@ -102,14 +105,18 @@ function convertToLatLng() {
     }).done(function (response) {
         userLatitude = response.results[0].locations[0].latLng.lat;
         userLongitude = response.results[0].locations[0].latLng.lng;
+        launchCountdown.getLaunchAPI();
     });
+
 }
 
 //Function to show the user's location
 function showPosition(position) {
     userLatitude = position.coords.latitude;
     userLongitude = position.coords.longitude;
-
+    launchCountdown.getLaunchAPI();
+    // console.log(userLatitude);
+    // console.log(userLongitude);
     reverseGeoUrl = "https://www.mapquestapi.com/geocoding/v1/reverse?key=" + geoApiKey + "&location=" + userLatitude + "," + userLongitude + "&includeRoadMetadata=true&includeNearestIntersection=true";
     $.ajax({
         url: reverseGeoUrl,
@@ -438,6 +445,9 @@ var launchCountdown = {
             // lat and long
             var launchLat = launchResults.location.pads[0]["latitude"];
             var launchLong = launchResults.location.pads[0]["longitude"];
+            // update userLat/long
+            // inputLocation = $("#location-input").val();
+            // convertToLatLng();
             // call latLongDistance
             latLongDistance(userLatitude, userLongitude, launchLat, launchLong);
             // console.log(distLaunch)
@@ -575,7 +585,6 @@ $(document).ready(function () {
     visiblePlanets.displayVisibility();
 
     // Display the launch countdown
-    launchCountdown.getLaunchAPI();
 
     //Display NASA's astronomy picture of the day
     displayPicOfDay();
@@ -595,7 +604,7 @@ $(document).ready(function () {
 
         //Get the location that the user typed in
         inputLocation = $("#location-input").val();
-
+        console.log(inputLocation);
         convertToLatLng();
 
         //If the user's input is a valid location
@@ -607,7 +616,6 @@ $(document).ready(function () {
         } else { // display please try again
             alert("The location entered is not valid");
         }
-        launchCountdown.getLaunchAPI();
     })
 
     //When the user clicks the Blast Off button
