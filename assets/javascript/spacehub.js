@@ -38,6 +38,7 @@ var monthNames = ["January", "February", "March", "April", "May", "June", "July"
 
 var monthName = monthNames[d.getMonth()];
 
+var distLaunch;
 
 //--------FUNCTIONS are declared here-------------------------------------------\\
 
@@ -120,6 +121,16 @@ function showPosition(position) {
         $("#location-input").val(inputLocation);
     });
 }
+
+// Function to calculate diatance between two lang long pairs (from: https://andrew.hedges.name/experiments/haversine/)
+function latLongDistance(lat1, lon1, lat2, lon2) {
+    dlon = lon2 - lon1; 
+    dlat = lat2 - lat1; 
+    aVal = (sin(dlat/2))^2 + cos(lat1) * cos(lat2) * (sin(dlon/2))^2; 
+    cVal = 2 * atan2( sqrt(aVal), sqrt(1-aVal) ); 
+    distLaunch = 3961 * cVal;
+}
+
 
 //Function to display the current weather information
 function currentWeather(viewingLocation) { //for the current time
@@ -377,7 +388,12 @@ var launchCountdown = {
             console.log(launchLocation);
             // map to location
             var launchLocationURL = launchResults.location.pads[0]["mapURL"];
-            console.log(launchLocationURL);
+            // lat and long
+            var launchLat = launchResults.location.pads[0]["latitude"];
+            var launchLong = launchResults.location.pads[0]["longitude"];
+            // call latLongDistance
+            latLongDistance(userLatitude, userLongitude, launchLat, launchLong);
+            console.log(distLaunch);
             // append text/link
             $("#launchName").append("Launch location: <a href='" + launchLocationURL + "'>" + launchLocation + "<br>");
 
@@ -387,8 +403,6 @@ var launchCountdown = {
     },
     // method for blastoff button
     blastOff: function () {
-        // initialize url array
-        var launchVidURLs = [];
         // initialize ids array
         var launchIDs = [];
         // initialize total var
