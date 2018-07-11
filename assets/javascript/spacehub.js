@@ -629,8 +629,7 @@ $(document).ready(function () {
         //If the user's input is a valid location
         if (locationIsValid(inputLocation) === true) {
 
-            //Populate the weather area with weather information
-            currentWeather(inputLocation);
+            dateIsInNextFive();
 
         } else { // display please try again
             alert("The location entered is not valid");
