@@ -19,9 +19,12 @@
 
     <!-- Link to jquery (necessary for ajax since 3.3.1 doesn't seem to work) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    
+
     <!-- Link to Moment.js-->
     <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+
+    <!-- Link to anime.js for animations -->
+    <script src="assets/javascript/anime.min.js"></script>
 
     <!-- Link to javascript file -->
     <script src="assets/javascript/spacehub.js"></script>
@@ -157,25 +160,27 @@
             </div>
             <!-- End of Search Results -->
 
+            <!-- Picture of the Day Area -->
+            <!-- <div class="btn-container"> -->
+            <div class="row">
+                <div class="col">
+                    <!-- <button type="button" class="btn btn-primary btn-lg btn-block" id="picButton">Picture of Day</button> -->
+                    <h3>NASA's Astronomy Picture of the Day</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div id="pic-of-day" class="embed-responsive embed-responsive-16by9">
+                    </div>
+                </div>
+            </div>
+            <!-- </div> -->
+            <!-- End of Picture of the Day Area -->
+
         </div>
     </div>
     <!-- End of Main Content Area -->
 
-    <div class="btn-container">
-        <div class="row">
-            <div class="col">
-        <button type="button" class="btn btn-primary btn-lg btn-block" id="picButton">Picture of Day</button>
-    </div>
-</div>
-<div class="row">
-            <div class="col">
-    <div id="picofDay">
-    
-        
-    </div>
-</div>
-</div>
-</div>
 
 </body>
 
