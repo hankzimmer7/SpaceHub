@@ -107,12 +107,8 @@ function convertToLatLng() {
 }
 
 function dateIsInNextFive() {
-  console.log(timeOffset);
   convertUnix = moment(userDate,'YYYY,MM,DD').unix();
-        console.log(convertUnix);
-        console.log(d);
 if(((convertUnix < d.getTime()/1000)&&((d.getTime()/1000 - convertUnix)>24*60*60))){
-    console.log("inputdate in the past");
     $("#forecast-weather").text("Your date is in the past");
 }
 else{
@@ -147,7 +143,6 @@ function showPosition(position) {
 
 //Function to display the current weather information
 function currentWeather(viewingLocation) { 
-    console.log(inputLocation);//for the current time
     // TBD programmatically. Set the location that will be used in the function calls
     var weatherqueryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + viewingLocation + "&units=imperial&appid=" + weatherApiKey;
     $.ajax({
@@ -184,8 +179,6 @@ function currentWeather(viewingLocation) {
             }) // We store all of the retrieved data inside of an object called "response"
                 .then(function (response) {
                     timeOffset = response.dstOffset + response.rawOffset;
-                    console.log(response);
-                    console.log("timeOffset is " + timeOffset)
                     locationTimezone = response.timeZoneName;
                     futureWeather(viewingLocation);
                 }); //end GMaps ajax 
@@ -398,23 +391,18 @@ var launchCountdown = {
     getLaunchAPI: function () {
         // assign queryURL to get "next" launch
         var queryURL = "https://launchlibrary.net/1.3/launch/next/1";
-        console.log(queryURL);
         // then ajax call
         $.ajax({
             url: queryURL,
             method: "GET"
         }).then(function (response) {
-            console.log(response);
             // results var to store data
             var launchResults = response.launches[0];
-            console.log(launchResults);
             // launchdate var
             var launchDate = launchResults.isostart;
-            console.log(launchDate);
 
             // convert launch date to correct format for TimeCircles
             var formatDate = moment(launchDate).format("YYYY-MM-DD hh:mm:ss");
-            console.log(formatDate);
             // edit data-date attribute
             $(".launch").attr("data-date", formatDate);
             // push date to TimeCircles
@@ -433,14 +421,11 @@ var launchCountdown = {
             var agencyNameURL = launchResults.rocket.agencies[0]["wikiURL"];
             // append text/link
             $("#launchName").append("Launch agency: <a href='" + agencyNameURL + "'>" + agencyName + "<br>");
-            console.log(agencyName)
 
             // location var
             var launchLocation = launchResults.location.name;
-            console.log(launchLocation);
             // map to location
             var launchLocationURL = launchResults.location.pads[0]["mapURL"];
-            console.log(launchLocationURL);
             // append text/link
             $("#launchName").append("Launch location: <a href='" + launchLocationURL + "'>" + launchLocation + "<br>");
 
@@ -459,7 +444,6 @@ var launchCountdown = {
 
         // use currentDate to get a range of launches
         // get yesterday's date in YYYY-MM-DD
-        console.log(d);
         var yesterday = d.setDate(d.getDate() - 1);
         // get 6 months ago from yesterday date
         var sixMonths = d.setDate(d.getDate() - 181);
@@ -468,56 +452,43 @@ var launchCountdown = {
         // format dates
         var formatYesterday = moment(yesterday).format("YYYY-MM-DD");
         var formatSixMonths = moment(sixMonths).format("YYYY-MM-DD");
-        console.log(formatYesterday);
-        console.log(formatSixMonths);
 
         // create queryURL in the form of https://launchlibrary.net/1.3/launch?startdate=formatSixMonths&enddate=formatYesterday
         var queryURL = "https://launchlibrary.net/1.3/launch?startdate=" + formatSixMonths + "&enddate=" + formatYesterday;
-        console.log(queryURL);
         // then ajax call
         $.ajax({
             url: queryURL,
             method: "GET"
         }).then(function (response) {
-            console.log(response);
             // update total
             total = response.total;
 
             // create next queryURL in the form of https://launchlibrary.net/1.3/launch?startdate=formatSixMonths&enddate=formatYesterday&limit=total
-            console.log(total);
             var queryURLLimit = queryURL + "&limit=" + total;
-            console.log(queryURLLimit);
 
             // then ajax call
             $.ajax({
                 url: queryURLLimit,
                 method: "GET"
             }).then(function (response) {
-                console.log(response);
-                console.log(response.launches.length)
                 // loop through response pushing IDs
                 for (i = 0; i < response.launches.length - 1; i++) {
                     launchIDs.push(response.launches[i]["id"]);
                 }
-                console.log(launchIDs)
 
                 // pick a random ID from the Array
                 var randomID = launchIDs[Math.floor(Math.random() * launchIDs.length)];
-                console.log(randomID);
 
                 // create next queryURL using randomID
                 var queryURLID = "https://launchlibrary.net/1.3/launch/" + randomID;
-                console.log(queryURLID);
 
                 // then ajax call
                 $.ajax({
                     url: queryURLID,
                     method: "GET"
                 }).then(function (response) {
-                    console.log(response);
                     // store vidsURLs
                     var vidURLsArray = response.launches[0]["vidURLs"]
-                    console.log(vidURLsArray);
                     // check if vidURLsArray is not null
                     if (vidURLsArray !== null) {
                         // pick a random url
