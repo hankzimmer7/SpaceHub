@@ -229,6 +229,40 @@ function chanceOfClearSky(viewingLocation) { // queries forecast not current wea
         }); //end ajax call
 } // end chanceOfClearSky function
 
+//Function to display NASA's Astronomy Picture of the Day
+function displayPicOfDay() {
+    var APIkey = "SB90oSEABnIVxulKWWm9a8gH7Eq7RyQgYAZCjKE1";
+    var queryURL = "https://api.nasa.gov/planetary/apod?api_key=" + APIkey;
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).then(function (response) {
+        $("#pic-of-day").empty();
+        var imgUrl = response.url;
+        var urlExtension = imgUrl.split('.').pop();
+
+        // If the picture of the day is an image, use an image tag
+        if (urlExtension === "jpg") {
+            var dayPic = $("<img>");
+            dayPic.addClass("img-fluid");
+            dayPic.attr("src", imgUrl);
+            dayPic.attr("alt", "Pic of Day");
+        }
+
+        //If the picture of the day is a video, use an iframe
+        else {
+            $("#pic-of-day").addClass("embed-responsive embed-responsive-16by9");
+            var dayPic = $("<iframe>");
+            dayPic.addClass("embed-responsive-item");
+            dayPic.attr("src", imgUrl);
+            dayPic.attr("alt", "Pic of Day");
+        }
+
+        //Append the pic of the day to the page
+        $("#pic-of-day").append(dayPic);
+    })
+};
+
 
 // Function to convert youtube to embed format
 function createYouTubeEmbedLink(link) {
@@ -504,6 +538,9 @@ $(document).ready(function () {
     // Display the launch countdown
     launchCountdown.getLaunchAPI();
 
+    //Display NASA's astronomy picture of the day
+    displayPicOfDay();
+
     //When the user clicks the search button
     $(document).on("click", "#search-button", function () {
 
@@ -513,6 +550,7 @@ $(document).ready(function () {
         //Get the date that the user selected
         userDate = $("#date-input").val();
         convertInputDate();
+
         visiblePlanets.displayVisibility();
 
 
@@ -531,8 +569,10 @@ $(document).ready(function () {
             alert("The location entered is not valid");
         }
     })
-    //When the user clicks the search button
+
+    //When the user clicks the Blast Off button
     $(document).on("click", "#blastOff", function () {
         launchCountdown.blastOff();
     })
+    
 });
