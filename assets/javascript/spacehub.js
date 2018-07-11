@@ -136,7 +136,7 @@ function latLongDistance(lat1, lon1, lat2, lon2) {
         ;
     var cVal = 2 * Math.atan2(Math.sqrt(aVal), Math.sqrt(1 - aVal));
     var dVal = R * cVal; // Distance in km
-    distLaunch = dVal
+    distLaunch = Math.round(dVal);
 }
 // degrees to radians function
 function deg2rad(deg) {
@@ -391,23 +391,23 @@ var launchCountdown = {
     getLaunchAPI: function () {
         // assign queryURL to get "next" launch
         var queryURL = "https://launchlibrary.net/1.3/launch/next/1";
-        console.log(queryURL);
+        // console.log(queryURL);
         // then ajax call
         $.ajax({
             url: queryURL,
             method: "GET"
         }).then(function (response) {
-            console.log(response);
+            // console.log(response);
             // results var to store data
             var launchResults = response.launches[0];
-            console.log(launchResults);
+            // console.log(launchResults);
             // launchdate var
             var launchDate = launchResults.isostart;
-            console.log(launchDate);
+            // console.log(launchDate);
 
             // convert launch date to correct format for TimeCircles
             var formatDate = moment(launchDate).format("YYYY-MM-DD hh:mm:ss");
-            console.log(formatDate);
+            // console.log(formatDate);
             // edit data-date attribute
             $(".launch").attr("data-date", formatDate);
             // push date to TimeCircles
@@ -426,11 +426,11 @@ var launchCountdown = {
             var agencyNameURL = launchResults.rocket.agencies[0]["wikiURL"];
             // append text/link
             $("#launchName").append("Launch agency: <a href='" + agencyNameURL + "'>" + agencyName + "<br>");
-            console.log(agencyName)
+            // console.log(agencyName)
 
             // location var
             var launchLocation = launchResults.location.name;
-            console.log(launchLocation);
+            // console.log(launchLocation);
             // map to location
             var launchLocationURL = launchResults.location.pads[0]["mapURL"];
             // lat and long
@@ -438,9 +438,9 @@ var launchCountdown = {
             var launchLong = launchResults.location.pads[0]["longitude"];
             // call latLongDistance
             latLongDistance(0, 0, launchLat, launchLong);
-            console.log(distLaunch);
+            // console.log(distLaunch);
             // append text/link
-            $("#launchName").append("Launch location: <a href='" + launchLocationURL + "'>" + launchLocation + "<br>");
+            $("#launchName").append("Launch location: <a href='" + launchLocationURL + "'>" + launchLocation + "</a><br>" + distLaunch + " miles from location");
 
 
 
@@ -455,7 +455,7 @@ var launchCountdown = {
 
         // use currentDate to get a range of launches
         // get yesterday's date in YYYY-MM-DD
-        console.log(d);
+        // console.log(d);
         var yesterday = d.setDate(d.getDate() - 1);
         // get 6 months ago from yesterday date
         var sixMonths = d.setDate(d.getDate() - 181);
@@ -464,61 +464,61 @@ var launchCountdown = {
         // format dates
         var formatYesterday = moment(yesterday).format("YYYY-MM-DD");
         var formatSixMonths = moment(sixMonths).format("YYYY-MM-DD");
-        console.log(formatYesterday);
-        console.log(formatSixMonths);
+        // console.log(formatYesterday);
+        // console.log(formatSixMonths);
 
         // create queryURL in the form of https://launchlibrary.net/1.3/launch?startdate=formatSixMonths&enddate=formatYesterday
         var queryURL = "https://launchlibrary.net/1.3/launch?startdate=" + formatSixMonths + "&enddate=" + formatYesterday;
-        console.log(queryURL);
+        // console.log(queryURL);
         // then ajax call
         $.ajax({
             url: queryURL,
             method: "GET"
         }).then(function (response) {
-            console.log(response);
+            // console.log(response);
             // update total
             total = response.total;
 
             // create next queryURL in the form of https://launchlibrary.net/1.3/launch?startdate=formatSixMonths&enddate=formatYesterday&limit=total
-            console.log(total);
+            // console.log(total);
             var queryURLLimit = queryURL + "&limit=" + total;
-            console.log(queryURLLimit);
+            // console.log(queryURLLimit);
 
             // then ajax call
             $.ajax({
                 url: queryURLLimit,
                 method: "GET"
             }).then(function (response) {
-                console.log(response);
-                console.log(response.launches.length)
+                // console.log(response);
+                // console.log(response.launches.length)
                 // loop through response pushing IDs
                 for (i = 0; i < response.launches.length - 1; i++) {
                     launchIDs.push(response.launches[i]["id"]);
                 }
-                console.log(launchIDs)
+                // console.log(launchIDs)
 
                 // pick a random ID from the Array
                 var randomID = launchIDs[Math.floor(Math.random() * launchIDs.length)];
-                console.log(randomID);
+                // console.log(randomID);
 
                 // create next queryURL using randomID
                 var queryURLID = "https://launchlibrary.net/1.3/launch/" + randomID;
-                console.log(queryURLID);
+                // console.log(queryURLID);
 
                 // then ajax call
                 $.ajax({
                     url: queryURLID,
                     method: "GET"
                 }).then(function (response) {
-                    console.log(response);
+                    // console.log(response);
                     // store vidsURLs
                     var vidURLsArray = response.launches[0]["vidURLs"]
-                    console.log(vidURLsArray);
+                    // console.log(vidURLsArray);
                     // check if vidURLsArray is not null
                     if (vidURLsArray !== null && vidURLsArray.length !== 0) {
                         // pick a random url
                         var randomVidURL = vidURLsArray[Math.floor(Math.random() * vidURLsArray.length)];
-                        console.log(randomVidURL);
+                        // console.log(randomVidURL);
                         // check if string includes youtube
                         if (randomVidURL.includes("youtube")) {
                             // convert URL to embed URL
