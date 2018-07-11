@@ -415,17 +415,13 @@ var launchCountdown = {
             url: queryURL,
             method: "GET"
         }).then(function (response) {
-            // console.log(response);
             // results var to store data
             var launchResults = response.launches[0];
-            // console.log(launchResults);
             // launchdate var
             var launchDate = launchResults.isostart;
-            // console.log(launchDate);
 
             // convert launch date to correct format for TimeCircles
             var formatDate = moment(launchDate).format("YYYY-MM-DD hh:mm:ss");
-            // console.log(formatDate);
             // edit data-date attribute
             $(".launch").attr("data-date", formatDate);
             // push date to TimeCircles
@@ -435,36 +431,54 @@ var launchCountdown = {
             var launchName = launchResults.name;
             // name url var
             var launchNameURL = launchResults.rocket.wikiURL;
+
             // append text/link
-            $("#launchName").append("Rocket name: <a href='" + launchNameURL + "'>" + launchName + "<br>");
+            var launchNameParagraph = $("<p>");
+            launchNameParagraph.addClass("launch-info");
+            launchNameHTML = "Rocket name: <a href='" + launchNameURL + "'>" + launchName;
+            launchNameParagraph.append(launchNameHTML);
+            $("#launchName").append(launchNameParagraph);
 
             // agency var
             var agencyName = launchResults.rocket.agencies[0]["name"];
             // agency url
             var agencyNameURL = launchResults.rocket.agencies[0]["wikiURL"];
             // append text/link
-            $("#launchName").append("Launch agency: <a href='" + agencyNameURL + "'>" + agencyName + "<br>");
-            // console.log(agencyName)
+
+            var agencyNameParagraph = $("<p>");
+            agencyNameParagraph.addClass("launch-info");
+            agencyNameHTML = "Launch agency: <a href='" + agencyNameURL + "'>" + agencyName;
+            agencyNameParagraph.append(agencyNameHTML);
+            $("#launchName").append(agencyNameParagraph);
 
             // location var
             var launchLocation = launchResults.location.name;
-            // console.log(launchLocation);
             // map to location
             var launchLocationURL = launchResults.location.pads[0]["mapURL"];
+
             // lat and long
             var launchLat = launchResults.location.pads[0]["latitude"];
             var launchLong = launchResults.location.pads[0]["longitude"];
             // call latLongDistance
             latLongDistance(userLatitude, userLongitude, launchLat, launchLong);
-            // console.log(distLaunch)
-            // console.log(userLatitude);
-            // console.log(userLongitude);
+
+            // append text/link
+            var launchLocationParagraph = $("<p>");
+            launchLocationParagraph.addClass("launch-info");
+            launchLocationHTML = "Launch location: <a href='" + launchLocationURL + "'>" + launchLocation;
+            launchLocationParagraph.append(launchLocationHTML);
+            $("#launchName").append(launchLocationParagraph);
+
+            var launchDistanceParagraph = $("<p>");
+            launchDistanceParagraph.addClass("launch-info");
+            launchDistanceHTML = distLaunch + " miles from location";
+            launchDistanceParagraph.append(launchDistanceHTML);
+
             // append text/link
             if (userLatitude && userLongitude) {
-                $("#launchName").append("Launch location: <a href='" + launchLocationURL + "'>" + launchLocation + "</a><br>" + distLaunch + " miles from location");
-            } else {
-                $("#launchName").append("Launch location: <a href='" + launchLocationURL + "'>" + launchLocation + "<br>");
+                $("#launchName").append(launchDistanceParagraph);
             }
+
         })
     },
     // method for blastoff button
