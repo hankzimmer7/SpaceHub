@@ -230,6 +230,11 @@ function chanceOfClearSky(viewingLocation) { // queries forecast not current wea
 } // end chanceOfClearSky function
 
 
+// Function to convert youtube to embed format
+function createYouTubeEmbedLink(link) {
+    return link.replace("https://www.youtube.com/watch?v=", "https://www.youtube.com/embed/");
+}
+
 //-------- Objects and methods ---------------------------------------------\\
 
 // create an object called visiblePlanets to hold the planet visibility data and methods for determining active visible planets
@@ -447,6 +452,25 @@ var launchCountdown = {
                     method: "GET"
                 }).then(function (response) {
                     console.log(response);
+                    // store vidsURLs
+                    var vidURLsArray = response.launches[0]["vidURLs"]
+                    console.log(vidURLsArray);
+                    // check if vidURLsArray is not null
+                    if (vidURLsArray !== null) {
+                        // pick a random url
+                        var randomVidURL = vidURLsArray[Math.floor(Math.random() * vidURLsArray.length)];
+                        // convert URL to embed URL
+                        var randomEmbedSRC = createYouTubeEmbedLink(randomVidURL);
+                        // edit attributes to show on page
+                        $("#blastOffRow").toggleClass("d-none", false);
+                        $("#blastOffVideo").attr("src", randomEmbedSRC);
+                    }
+                    // otherwise get new value
+                    else {
+                        launchCountdown.blastOff();
+                    }
+                    // push URL to embeded youtube div
+
                 })
             })
         })
