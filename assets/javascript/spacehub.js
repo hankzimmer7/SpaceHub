@@ -126,9 +126,9 @@ function currentWeather(viewingLocation) { //for the current time
     // TBD programmatically. Set the location that will be used in the function calls
     var weatherqueryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + viewingLocation + "&units=imperial&appid=" + weatherApiKey;
     $.ajax({
-            url: weatherqueryURL,
-            method: "GET"
-        }) // We store all of the retrieved data inside of an object called "response"
+        url: weatherqueryURL,
+        method: "GET"
+    }) // We store all of the retrieved data inside of an object called "response"
         .then(function (response) {
             var cloudyOrNot = response.weather[0];
             var currentWeather = $("#current-weather");
@@ -154,9 +154,9 @@ function currentWeather(viewingLocation) { //for the current time
             var latLong = response.coord.lat + "," + response.coord.lon
             var timezoneURL = "https://maps.googleapis.com/maps/api/timezone/json?location=" + latLong + "&timestamp=" + response.dt + "&key=" + GMapsKey;
             $.ajax({
-                    url: timezoneURL,
-                    method: "GET"
-                }) // We store all of the retrieved data inside of an object called "response"
+                url: timezoneURL,
+                method: "GET"
+            }) // We store all of the retrieved data inside of an object called "response"
                 .then(function (response) {
                     timeOffset = response.dstOffset + response.rawOffset;
                     locationTimezone = response.timeZoneName;
@@ -169,9 +169,9 @@ function currentWeather(viewingLocation) { //for the current time
 function chanceOfClearSky(viewingLocation) { // queries forecast not current weather removed: units=imperial&
     var forecastqueryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + viewingLocation + "&appid=" + weatherApiKey;
     $.ajax({
-            url: forecastqueryURL,
-            method: "GET"
-        })
+        url: forecastqueryURL,
+        method: "GET"
+    })
         .then(function (response) { //report every *4th* of the 40 weather predictions, each 3h apart, 
 
             var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
@@ -263,6 +263,11 @@ function displayPicOfDay() {
     })
 };
 
+
+// Function to convert youtube to embed format
+function createYouTubeEmbedLink(link) {
+    return link.replace("https://www.youtube.com/watch?v=", "https://www.youtube.com/embed/");
+}
 
 //-------- Objects and methods ---------------------------------------------\\
 
@@ -413,9 +418,97 @@ var launchCountdown = {
 
 
         })
-    }
-    // first get browser date
+    },
+    // method for blastoff button
+    blastOff: function () {
+        // initialize url array
+        var launchVidURLs = [];
+        // initialize ids array
+        var launchIDs = [];
+        // initialize total var
+        var total;
 
+        // use currentDate to get a range of launches
+        // get yesterday's date in YYYY-MM-DD
+        console.log(d);
+        var yesterday = d.setDate(d.getDate() - 1);
+        // get 6 months ago from yesterday date
+        var sixMonths = d.setDate(d.getDate() - 181);
+        // reset d
+        d = new Date();
+        // format dates
+        var formatYesterday = moment(yesterday).format("YYYY-MM-DD");
+        var formatSixMonths = moment(sixMonths).format("YYYY-MM-DD");
+        console.log(formatYesterday);
+        console.log(formatSixMonths);
+
+        // create queryURL in the form of https://launchlibrary.net/1.3/launch?startdate=formatSixMonths&enddate=formatYesterday
+        var queryURL = "https://launchlibrary.net/1.3/launch?startdate=" + formatSixMonths + "&enddate=" + formatYesterday;
+        console.log(queryURL);
+        // then ajax call
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).then(function (response) {
+            console.log(response);
+            // update total
+            total = response.total;
+
+            // create next queryURL in the form of https://launchlibrary.net/1.3/launch?startdate=formatSixMonths&enddate=formatYesterday&limit=total
+            console.log(total);
+            var queryURLLimit = queryURL + "&limit=" + total;
+            console.log(queryURLLimit);
+
+            // then ajax call
+            $.ajax({
+                url: queryURLLimit,
+                method: "GET"
+            }).then(function (response) {
+                console.log(response);
+                console.log(response.launches.length)
+                // loop through response pushing IDs
+                for (i = 0; i < response.launches.length - 1; i++) {
+                    launchIDs.push(response.launches[i]["id"]);
+                }
+                console.log(launchIDs)
+
+                // pick a random ID from the Array
+                var randomID = launchIDs[Math.floor(Math.random() * launchIDs.length)];
+                console.log(randomID);
+
+                // create next queryURL using randomID
+                var queryURLID = "https://launchlibrary.net/1.3/launch/" + randomID;
+                console.log(queryURLID);
+
+                // then ajax call
+                $.ajax({
+                    url: queryURLID,
+                    method: "GET"
+                }).then(function (response) {
+                    console.log(response);
+                    // store vidsURLs
+                    var vidURLsArray = response.launches[0]["vidURLs"]
+                    console.log(vidURLsArray);
+                    // check if vidURLsArray is not null
+                    if (vidURLsArray !== null) {
+                        // pick a random url
+                        var randomVidURL = vidURLsArray[Math.floor(Math.random() * vidURLsArray.length)];
+                        // convert URL to embed URL
+                        var randomEmbedSRC = createYouTubeEmbedLink(randomVidURL);
+                        // edit attributes to show on page
+                        $("#blastOffRow").toggleClass("d-none", false);
+                        $("#blastOffVideo").attr("src", randomEmbedSRC);
+                    }
+                    // otherwise get new value
+                    else {
+                        launchCountdown.blastOff();
+                    }
+                    // push URL to embeded youtube div
+
+                })
+            })
+        })
+    }
 }
 
 //-------Once the page loads, execute these functions--------------------------\\
@@ -475,5 +568,11 @@ $(document).ready(function () {
         } else { // display please try again
             alert("The location entered is not valid");
         }
-    });
+    })
+
+    //When the user clicks the Blast Off button
+    $(document).on("click", "#blastOff", function () {
+        launchCountdown.blastOff();
+    })
+    
 });
