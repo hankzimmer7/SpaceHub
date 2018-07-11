@@ -1,9 +1,17 @@
 body {
     background-image: url("../images/galaxy-background.jpg");
 }
-
-h1, p {
+h1 {
+    font-size: 3.5rem;
+    font-weight: 300;
+    line-height: 1.2;
+}
+h1,
+p {
     color: rgb(50, 60, 60);
+}
+p {
+    line-height: 0.5rem;
 }
 form {
     margin-bottom: 1rem;
@@ -19,42 +27,59 @@ form {
 }
 
 .slideshow-container {
-  margin-bottom: 1rem;
+    margin-bottom: 1rem;
 }
+
 .space-slide {
     display: none;
+}
+
+.launch-info {
+    font-size: 2rem;
+    font-weight: 400;
 }
 
 /* --------Responsive Styling------------------------------------------- */
 
 /* Large devices (desktops, less than 1200px) */
-
 @media screen and (max-width: 1199.98px) {}
 
 /* Medium devices (tablets, less than 992px) */
-
 @media screen and (max-width: 991.98px) {
-    .display-4 {
+    h1 {
         font-size: 3rem;
+    }
+    h2 {
+        font-size: 1.8rem;
+    }
+    .launch-info {
+        font-size: 1.5rem;
     }
 }
 
 /* Small devices (landscape phones, less than 768px) */
-
 @media screen and (max-width: 767.98px) {
-    .display-4 {
+    h1 {
         font-size: 2.5rem;
+    }
+    h2 {
+        font-size: 1.2rem;
+    }
+    .launch-info {
+        font-size: 1.2rem;
     }
 }
 
 /* Extra small devices (portrait phones, less than 576px) */
-
 @media screen and (max-width: 575.98px) {
-    h3 {
-        font-size: 1.5rem;
-    }
-    .display-4 {
+    h1 {
         font-size: 2rem;
+    }
+    h2 {
+        font-size: 1rem;
+    }
+    .launch-info {
+        font-size: 1rem;
     }
     .jumbotron {
         padding: 2rem 1rem;
@@ -62,15 +87,20 @@ form {
 }
 
 /* Tiny devices */
-
 @media screen and (max-width: 420px) {
-    h3 {
-        font-size: 1rem;
-    }
-    .display-4 {
+    h1 {
         font-size: 1.2rem;
     }
-    p, label, .btn, .form-control {
+    h2 {
+        font-size: 0.75rem;
+    }
+    .launch-info {
+        font-size: 0.75rem;
+    }
+    p,
+    label,
+    .btn,
+    .form-control {
         font-size: .75rem;
     }
 }

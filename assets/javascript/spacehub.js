@@ -612,5 +612,10 @@ $(document).ready(function () {
     $(document).on("click", "#blastOff", function () {
         launchCountdown.blastOff();
     })
+
+    //Redraw the time circles when the page is resized
+    $(window).resize(function(){
+        $(".launch").TimeCircles().rebuild();
+    });
     
 });
