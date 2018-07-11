@@ -226,7 +226,6 @@ function futureWeather(viewingLocation) { // queries forecast not current weathe
                 var weatherPeriod = i * 4;
                 var list = response.list[weatherPeriod];
                 var forecastDate = new Date(list.dt * 1000); //convert unix to JS.
-                console.log(forecastDate);
                 // From the API doc https://openweathermap.org/forecast5#JSON, 
                 // list.dt returns the ***Time of data forecasted, unix, UTC***
 
