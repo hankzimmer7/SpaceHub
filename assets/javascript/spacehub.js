@@ -191,7 +191,7 @@ function chanceOfClearSky(viewingLocation) { // queries forecast not current wea
 
                 //The forecast text contains the day of the week and that day's weather
                 var forecastDayText = daysOfWeek[forecastDate.getDay()] + " ";
-                
+
                 var timZon = $("<span>"); //This is the time including a time zone title
                 timZon.attr("title", locationTimezone);
                 timZon.text(list.dt_txt.substring(11))
@@ -228,6 +228,40 @@ function chanceOfClearSky(viewingLocation) { // queries forecast not current wea
             }
         }); //end ajax call
 } // end chanceOfClearSky function
+
+//Function to display NASA's Astronomy Picture of the Day
+function displayPicOfDay() {
+    var APIkey = "SB90oSEABnIVxulKWWm9a8gH7Eq7RyQgYAZCjKE1";
+    var queryURL = "https://api.nasa.gov/planetary/apod?api_key=" + APIkey;
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).then(function (response) {
+        $("#pic-of-day").empty();
+        var imgUrl = response.url;
+        var urlExtension = imgUrl.split('.').pop();
+
+        // If the picture of the day is an image, use an image tag
+        if (urlExtension === "jpg") {
+            var dayPic = $("<img>");
+            dayPic.addClass("img-fluid");
+            dayPic.attr("src", imgUrl);
+            dayPic.attr("alt", "Pic of Day");
+        }
+
+        //If the picture of the day is a video, use an iframe
+        else {
+            $("#pic-of-day").addClass("embed-responsive embed-responsive-16by9");
+            var dayPic = $("<iframe>");
+            dayPic.addClass("embed-responsive-item");
+            dayPic.attr("src", imgUrl);
+            dayPic.attr("alt", "Pic of Day");
+        }
+
+        //Append the pic of the day to the page
+        $("#pic-of-day").append(dayPic);
+    })
+};
 
 
 //-------- Objects and methods ---------------------------------------------\\
@@ -327,7 +361,7 @@ var visiblePlanets = {
 // create an object called launchCountdown to hold methods for displaying launch countdown
 var launchCountdown = {
     // method to get data from API
-    getLaunchAPI: function() {
+    getLaunchAPI: function () {
         // assign queryURL to get "next" launch
         var queryURL = "https://launchlibrary.net/1.3/launch/next/1";
         console.log(queryURL);
@@ -335,7 +369,7 @@ var launchCountdown = {
         $.ajax({
             url: queryURL,
             method: "GET"
-        }).then(function(response) {
+        }).then(function (response) {
             console.log(response);
             // results var to store data
             var launchResults = response.launches[0];
@@ -357,16 +391,16 @@ var launchCountdown = {
             // name url var
             var launchNameURL = launchResults.rocket.wikiURL;
             // append text/link
-            $("#launchName").append("Rocket name: <a href='" + launchNameURL +"'>" + launchName + "<br>");
-            
+            $("#launchName").append("Rocket name: <a href='" + launchNameURL + "'>" + launchName + "<br>");
+
             // agency var
             var agencyName = launchResults.rocket.agencies[0]["name"];
             // agency url
             var agencyNameURL = launchResults.rocket.agencies[0]["wikiURL"];
             // append text/link
-            $("#launchName").append("Launch agency: <a href='" + agencyNameURL +"'>" + agencyName + "<br>");
+            $("#launchName").append("Launch agency: <a href='" + agencyNameURL + "'>" + agencyName + "<br>");
             console.log(agencyName)
-            
+
             // location var
             var launchLocation = launchResults.location.name;
             console.log(launchLocation);
@@ -374,15 +408,13 @@ var launchCountdown = {
             var launchLocationURL = launchResults.location.pads[0]["mapURL"];
             console.log(launchLocationURL);
             // append text/link
-            $("#launchName").append("Launch location: <a href='" + launchLocationURL +"'>" + launchLocation + "<br>");
+            $("#launchName").append("Launch location: <a href='" + launchLocationURL + "'>" + launchLocation + "<br>");
 
 
 
         })
     }
     // first get browser date
-
-
 
 }
 
@@ -413,6 +445,9 @@ $(document).ready(function () {
     // Display the launch countdown
     launchCountdown.getLaunchAPI();
 
+    //Display NASA's astronomy picture of the day
+    displayPicOfDay();
+
     //When the user clicks the search button
     $(document).on("click", "#search-button", function () {
 
@@ -422,6 +457,7 @@ $(document).ready(function () {
         //Get the date that the user selected
         userDate = $("#date-input").val();
         convertInputDate();
+
         visiblePlanets.displayVisibility();
 
 
@@ -439,5 +475,5 @@ $(document).ready(function () {
         } else { // display please try again
             alert("The location entered is not valid");
         }
-    })
+    });
 });
