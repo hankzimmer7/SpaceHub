@@ -416,7 +416,7 @@ var launchCountdown = {
             $(".launch").TimeCircles();
 
             // name var
-            var launchName = launchResults.name
+            var launchName = launchResults.name;
             // name url var
             var launchNameURL = launchResults.rocket.wikiURL;
             // append text/link
@@ -440,15 +440,16 @@ var launchCountdown = {
             var launchLong = launchResults.location.pads[0]["longitude"];
             // call latLongDistance
             latLongDistance(userLatitude, userLongitude, launchLat, launchLong);
-            console.log(distLaunch)
-            console.log(userLatitude);
-            console.log(userLongitude);
-            // console.log(distLaunch);
+            // console.log(distLaunch)
+            // console.log(userLatitude);
+            // console.log(userLongitude);
             // append text/link
-            $("#launchName").append("Launch location: <a href='" + launchLocationURL + "'>" + launchLocation + "</a><br>" + distLaunch + " miles from location");
-
-
-
+            if (userLatitude && userLongitude) {
+                $("#launchName").append("Launch location: <a href='" + launchLocationURL + "'>" + launchLocation + "</a><br>" + distLaunch + " miles from location");
+            }
+            else {
+                $("#launchName").append("Launch location: <a href='" + launchLocationURL + "'>" + launchLocation + "<br>");
+            }
         })
     },
     // method for blastoff button
