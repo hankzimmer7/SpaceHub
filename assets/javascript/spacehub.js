@@ -389,6 +389,8 @@ var visiblePlanets = {
 var launchCountdown = {
     // method to get data from API
     getLaunchAPI: function () {
+        // clear out existing HTML
+        $(".launch-info").empty();
         // assign queryURL to get "next" launch
         var queryURL = "https://launchlibrary.net/1.3/launch/next/1";
         // console.log(queryURL);
@@ -437,7 +439,10 @@ var launchCountdown = {
             var launchLat = launchResults.location.pads[0]["latitude"];
             var launchLong = launchResults.location.pads[0]["longitude"];
             // call latLongDistance
-            latLongDistance(0, 0, launchLat, launchLong);
+            latLongDistance(userLatitude, userLongitude, launchLat, launchLong);
+            console.log(distLaunch)
+            console.log(userLatitude);
+            console.log(userLongitude);
             // console.log(distLaunch);
             // append text/link
             $("#launchName").append("Launch location: <a href='" + launchLocationURL + "'>" + launchLocation + "</a><br>" + distLaunch + " miles from location");
@@ -601,6 +606,7 @@ $(document).ready(function () {
         } else { // display please try again
             alert("The location entered is not valid");
         }
+        launchCountdown.getLaunchAPI();
     })
 
     //When the user clicks the Blast Off button
