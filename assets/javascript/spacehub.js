@@ -14,6 +14,7 @@ var geoApiKey = "vIThotHxCdFMxbA7OSxbY4kmK0bOGSBg";
 var GMapsKey = "AIzaSyBGEg1nWHjxTxBD48-AkHMm0QV_TVn0S50";
 var timeOffset = 0;
 var locationTimezone = "";
+var convertUnix;
 
 // Variable for storing the date the user entered
 var userDate;
@@ -31,6 +32,7 @@ var d = new Date();
 var year = d.getFullYear();
 // store month
 var month = d.getMonth();
+
 // month names
 var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "november", "december"];
 
@@ -97,18 +99,26 @@ function convertToLatLng() {
     });
 }
 
-function dateIsInNextFive(viewingDate) {
-    var foo = new Date();
-    foo = viewingDate;
-    // console.log("get time " + foo.getTime());
-    console.log("viewingDate is " + viewingDate);
-    console.log(foo)
-    if (0 < 5) { //math says it's within five)
-        return true;
-    }
-    else {
-        return false
-    } // end if else
+function dateIsInNextFive() {
+  console.log(timeOffset);
+  convertUnix = moment(userDate,'YYYY,MM,DD').unix();
+        console.log(convertUnix);
+        console.log(d);
+if(((convertUnix < d.getTime()/1000)&&((d.getTime()/1000 - convertUnix)>24*60*60))){
+    console.log("inputdate in the past");
+    $("#forecast-weather").text("Your date is in the past");
+}
+else{
+   var datesBetween = convertUnix-d.getTime()/1000;
+        console.log(datesBetween); 
+   if (datesBetween > 5*24*60*60 ){
+       $("#forecast-weather").text("Weather forecast available only for the next five days");
+   }
+  else{
+      //oneDaysWeather();
+      currentWeather(inputLocation);
+  }
+}
 } // end dateIsInNextFive
 
 //Function to show the user's location
@@ -130,7 +140,8 @@ function showPosition(position) {
 }
 
 //Function to display the current weather information
-function currentWeather(viewingLocation) { //for the current time
+function currentWeather(viewingLocation) { 
+    console.log(inputLocation);//for the current time
     // TBD programmatically. Set the location that will be used in the function calls
     var weatherqueryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + viewingLocation + "&units=imperial&appid=" + weatherApiKey;
     $.ajax({
@@ -183,7 +194,7 @@ function futureWeather(viewingLocation) { // queries forecast not current weathe
         method: "GET"
     })
         .then(function (response) { //report every *4th* of the 40 weather predictions, each 3h apart, 
-
+            console.log(response);
             var daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
             var fw = $("#forecast-weather");
             fw.empty();
@@ -429,7 +440,7 @@ $(document).ready(function () {
 
     //Display the planetary visibility & weather
     visiblePlanets.displayVisibility();
-
+    
 
     //When the user clicks the search button
     $(document).on("click", "#search-button", function () {
@@ -449,11 +460,12 @@ $(document).ready(function () {
 
         //If the user's input is a valid location
         if (locationIsValid(inputLocation) === true) {
-
+            
+            dateIsInNextFive();
             //Populate the weather area with one day's information
-            if (dateIsInNextFive(userDate)) {
+           // if (dateIsInNextFive(userDate)) {
                 // oneDaysWeather(userDate, inputLocation);
-            }
+            //}
 
         } else { // display please try again
             alert("The location entered is not valid");
