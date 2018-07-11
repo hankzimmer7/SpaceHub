@@ -98,7 +98,7 @@ function convertToLatLng() {
     $.ajax({
         url: geoUrl,
         method: "GET"
-    }).done(function (response) {
+    }).done(function(response) {
         userLatitude = response.results[0].locations[0].latLng.lat;
         userLongitude = response.results[0].locations[0].latLng.lng;
     });
@@ -113,7 +113,7 @@ function showPosition(position) {
     $.ajax({
         url: reverseGeoUrl,
         method: "GET"
-    }).then(function (response) {
+    }).then(function(response) {
         inputLocation = response.results[0].locations[0].adminArea5 +
             "," + response.results[0].locations[0].adminArea3 +
             "," + response.results[0].locations[0].adminArea1;
@@ -129,7 +129,7 @@ function currentWeather(viewingLocation) { //for the current time
             url: weatherqueryURL,
             method: "GET"
         }) // We store all of the retrieved data inside of an object called "response"
-        .then(function (response) {
+        .then(function(response) {
             var cloudyOrNot = response.weather[0];
             var currentWeather = $("#current-weather");
             currentWeather.empty();
@@ -157,7 +157,7 @@ function currentWeather(viewingLocation) { //for the current time
                     url: timezoneURL,
                     method: "GET"
                 }) // We store all of the retrieved data inside of an object called "response"
-                .then(function (response) {
+                .then(function(response) {
                     timeOffset = response.dstOffset + response.rawOffset;
                     locationTimezone = response.timeZoneName;
                     chanceOfClearSky(viewingLocation);
@@ -172,7 +172,7 @@ function chanceOfClearSky(viewingLocation) { // queries forecast not current wea
             url: forecastqueryURL,
             method: "GET"
         })
-        .then(function (response) { //report every *4th* of the 40 weather predictions, each 3h apart, 
+        .then(function(response) { //report every *4th* of the 40 weather predictions, each 3h apart, 
 
             var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
             var fw = $("#forecast-weather");
@@ -236,7 +236,7 @@ function displayPicOfDay() {
     $.ajax({
         url: queryURL,
         method: "GET"
-    }).then(function (response) {
+    }).then(function(response) {
         $("#pic-of-day").empty();
         var imgUrl = response.url;
         var urlExtension = imgUrl.split('.').pop();
@@ -302,7 +302,7 @@ var visiblePlanets = {
         November: ["at dawn", "at dusk", "at dawn", "in the evening", "in the evening", "in the evening", "in the evening"],
         December: ["at dawn", "in the evening", "in the morning", "null", "at dusk", "in the evening", "in the evening"],
     },
-    displayVisibility: function () {
+    displayVisibility: function() {
         // empty the div for new results
         $("#visibility").empty();
 
@@ -361,7 +361,7 @@ var visiblePlanets = {
 // create an object called launchCountdown to hold methods for displaying launch countdown
 var launchCountdown = {
     // method to get data from API
-    getLaunchAPI: function () {
+    getLaunchAPI: function() {
         // assign queryURL to get "next" launch
         var queryURL = "https://launchlibrary.net/1.3/launch/next/1";
         console.log(queryURL);
@@ -369,7 +369,7 @@ var launchCountdown = {
         $.ajax({
             url: queryURL,
             method: "GET"
-        }).then(function (response) {
+        }).then(function(response) {
             console.log(response);
             // results var to store data
             var launchResults = response.launches[0];
@@ -419,15 +419,8 @@ var launchCountdown = {
 }
 
 //-------Once the page loads, execute these functions--------------------------\\
-$(document).ready(function () {
-
-    //Have the title fly in from the right
-    anime({
-        targets: '.display-4',
-        translateX: [500, 0],
-        duration: 1000,
-        easing: 'easeInOutQuart'
-    });
+$(document).ready(function() {
+    //------------------meteor showers days remaining----------------//
 
     //Display the planet slideshow
     showSlides();
@@ -449,7 +442,7 @@ $(document).ready(function () {
     displayPicOfDay();
 
     //When the user clicks the search button
-    $(document).on("click", "#search-button", function () {
+    $(document).on("click", "#search-button", function() {
 
         //Prevent the submit button from reloading the page
         event.preventDefault();
@@ -476,4 +469,21 @@ $(document).ready(function () {
             alert("The location entered is not valid");
         }
     });
+
+
+    var sDates = [new Date('2018-08-12 12:00'), new Date('2018-10-21 12:00'), new Date('2018-11-17 2:00'), new Date('2018-12-13 11:10')]
+
+    for (var i = 0; i < sDates.length; i++) {
+
+        var diffInSeconds = Math.abs(sDates[i] - d) / 1000;
+        var days = Math.floor(diffInSeconds / 60 / 60 / 24);
+        var hours = Math.floor(diffInSeconds / 60 / 60 % 24);
+        var minutes = Math.floor(diffInSeconds / 60 % 60);
+        var showerContainer = $("<p>");
+        showerContainer.append(days + 'days ');
+        showerContainer.append(hours + 'hours ');
+        showerContainer.append(minutes + 'minutes ');
+        $("#meteorShowers").append(showerContainer);
+    }
+
 });
