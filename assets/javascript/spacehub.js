@@ -14,6 +14,7 @@ var geoApiKey = "vIThotHxCdFMxbA7OSxbY4kmK0bOGSBg";
 var GMapsKey = "AIzaSyBGEg1nWHjxTxBD48-AkHMm0QV_TVn0S50";
 var timeOffset = 0;
 var locationTimezone = "";
+var convertUnix;
 
 // Variable for storing the date the user entered
 var userDate;
@@ -105,6 +106,21 @@ function convertToLatLng() {
     });
 }
 
+function dateIsInNextFive() {
+    convertUnix = moment(userDate, 'YYYY,MM,DD').unix();
+    if (((convertUnix < d.getTime() / 1000) && ((d.getTime() / 1000 - convertUnix) > 24 * 60 * 60))) {
+        $("#forecast-weather").text("Your date is in the past");
+    } else {
+        var datesBetween = convertUnix - d.getTime() / 1000;
+        if (datesBetween > 5 * 24 * 60 * 60) {
+            $("#forecast-weather").text("Weather forecast available only for the next five days");
+        } else {
+            //oneDaysWeather();	
+            currentWeather(inputLocation);
+        }
+    }
+} // end dateIsInNextFive
+
 //Function to show the user's location
 function showPosition(position) {
     userLatitude = position.coords.latitude;
@@ -119,6 +135,7 @@ function showPosition(position) {
             "," + response.results[0].locations[0].adminArea3 +
             "," + response.results[0].locations[0].adminArea1;
         $("#location-input").val(inputLocation);
+        currentWeather(inputLocation); // also calls the GMaps timezone ajax, then the futureWeather ajax
     });
 }
 
@@ -127,13 +144,12 @@ function showPosition(position) {
 // distance function
 function latLongDistance(lat1, lon1, lat2, lon2) {
     var R = 3959; // Radius of the earth in miles
-    var dLat = deg2rad(lat2 - lat1);  // deg2rad below
+    var dLat = deg2rad(lat2 - lat1); // deg2rad below
     var dLon = deg2rad(lon2 - lon1);
     var aVal =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-        Math.sin(dLon / 2) * Math.sin(dLon / 2)
-        ;
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
     var cVal = 2 * Math.atan2(Math.sqrt(aVal), Math.sqrt(1 - aVal));
     var dVal = R * cVal; // Distance in km
     distLaunch = Math.round(dVal);
@@ -148,9 +164,9 @@ function currentWeather(viewingLocation) { //for the current time
     // TBD programmatically. Set the location that will be used in the function calls
     var weatherqueryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + viewingLocation + "&units=imperial&appid=" + weatherApiKey;
     $.ajax({
-        url: weatherqueryURL,
-        method: "GET"
-    }) // We store all of the retrieved data inside of an object called "response"
+            url: weatherqueryURL,
+            method: "GET"
+        }) // We store all of the retrieved data inside of an object called "response"
         .then(function (response) {
             var cloudyOrNot = response.weather[0];
             var currentWeather = $("#current-weather");
@@ -176,27 +192,27 @@ function currentWeather(viewingLocation) { //for the current time
             var latLong = response.coord.lat + "," + response.coord.lon
             var timezoneURL = "https://maps.googleapis.com/maps/api/timezone/json?location=" + latLong + "&timestamp=" + response.dt + "&key=" + GMapsKey;
             $.ajax({
-                url: timezoneURL,
-                method: "GET"
-            }) // We store all of the retrieved data inside of an object called "response"
+                    url: timezoneURL,
+                    method: "GET"
+                }) // We store all of the retrieved data inside of an object called "response"
                 .then(function (response) {
                     timeOffset = response.dstOffset + response.rawOffset;
                     locationTimezone = response.timeZoneName;
-                    chanceOfClearSky(viewingLocation);
+                    futureWeather(viewingLocation);
                 }); //end GMaps ajax 
         }); //end Weather ajax function
 } // end current weather function
 
 // Function to display the future weather forecast data
-function chanceOfClearSky(viewingLocation) { // queries forecast not current weather removed: units=imperial&
+function futureWeather(viewingLocation) { // queries forecast not current weather removed: units=imperial&
     var forecastqueryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + viewingLocation + "&appid=" + weatherApiKey;
     $.ajax({
-        url: forecastqueryURL,
-        method: "GET"
-    })
+            url: forecastqueryURL,
+            method: "GET"
+        })
         .then(function (response) { //report every *4th* of the 40 weather predictions, each 3h apart, 
 
-            var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+            var daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
             var fw = $("#forecast-weather");
             fw.empty();
             for (i = 0; i < 10; i++) {
@@ -216,7 +232,7 @@ function chanceOfClearSky(viewingLocation) { // queries forecast not current wea
 
                 var timZon = $("<span>"); //This is the time including a time zone title
                 timZon.attr("title", locationTimezone);
-                timZon.text(list.dt_txt.substring(11))
+                timZon.text(list.dt_txt.substring(11)); // We DID NOT incorporate timeOffset variable! -Brett's bad
                 fw.append(timZon); //append the time
 
                 var forecastWeatherText = " " + list.weather[0].description;
@@ -446,14 +462,15 @@ var launchCountdown = {
             // append text/link
             if (userLatitude && userLongitude) {
                 $("#launchName").append("Launch location: <a href='" + launchLocationURL + "'>" + launchLocation + "</a><br>" + distLaunch + " miles from location");
-            }
-            else {
+            } else {
                 $("#launchName").append("Launch location: <a href='" + launchLocationURL + "'>" + launchLocation + "<br>");
             }
         })
     },
     // method for blastoff button
     blastOff: function () {
+        // initialize url array	
+        var launchVidURLs = [];
         // initialize ids array
         var launchIDs = [];
         // initialize total var
@@ -596,7 +613,9 @@ $(document).ready(function () {
         //Get the location that the user typed in
         inputLocation = $("#location-input").val();
 
-        convertToLatLng();
+
+        convertToLatLng(); //what does this do? -BW
+        visiblePlanets.displayVisibility();
 
         //If the user's input is a valid location
         if (locationIsValid(inputLocation) === true) {
