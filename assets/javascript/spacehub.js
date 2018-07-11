@@ -456,14 +456,22 @@ var launchCountdown = {
                     var vidURLsArray = response.launches[0]["vidURLs"]
                     console.log(vidURLsArray);
                     // check if vidURLsArray is not null
-                    if (vidURLsArray !== null) {
+                    if (vidURLsArray !== null && vidURLsArray.length !== 0) {
                         // pick a random url
                         var randomVidURL = vidURLsArray[Math.floor(Math.random() * vidURLsArray.length)];
-                        // convert URL to embed URL
-                        var randomEmbedSRC = createYouTubeEmbedLink(randomVidURL);
-                        // edit attributes to show on page
-                        $("#blastOffRow").toggleClass("d-none", false);
-                        $("#blastOffVideo").attr("src", randomEmbedSRC);
+                        console.log(randomVidURL);
+                        // check if string includes youtube
+                        if (randomVidURL.includes("youtube")) {
+                            // convert URL to embed URL
+                            var randomEmbedSRC = createYouTubeEmbedLink(randomVidURL);
+                            // edit attributes to show on page
+                            $("#blastOffRow").toggleClass("d-none", false);
+                            $("#blastOffVideo").attr("src", randomEmbedSRC);
+                        }
+                        // otherwise get new value
+                        else {
+                            launchCountdown.blastOff();
+                        }
                     }
                     // otherwise get new value
                     else {
