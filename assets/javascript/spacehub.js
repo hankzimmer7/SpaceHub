@@ -41,6 +41,10 @@ var monthName = monthNames[d.getMonth()];
 
 var distLaunch;
 
+//Variables for Meteor Shower Information
+var showerNames = ["Perseids", "Orionids", "Leonids", "Geminids"];
+var showerDates = [new Date('2018-08-12 12:00'), new Date('2018-10-21 12:00'), new Date('2018-11-17 2:00'), new Date('2018-12-13 11:10')]
+
 //--------FUNCTIONS are declared here-------------------------------------------\\
 
 //Function for cycling through planet display slides
@@ -111,7 +115,7 @@ function convertToLatLng() {
 function dateIsInNextFive() {
     convertUnix = moment(userDate, 'YYYY,MM,DD').unix();
     if (((convertUnix < d.getTime() / 1000) && ((d.getTime() / 1000 - convertUnix) > 24 * 60 * 60))) {
-        $("#forecast-weather").text("Your date is in the past");
+        $("#forecast-weather").html("<p>The date entered is in the past.<p>");
     } else {
         var datesBetween = convertUnix - d.getTime() / 1000;
         if (datesBetween > 5 * 24 * 60 * 60) {
@@ -268,6 +272,21 @@ function futureWeather(viewingLocation) { // queries forecast not current weathe
             }
         }); //end ajax call
 } // end chanceOfClearSky function
+
+function displayMeteorShowerInfo() {
+
+    for (var i = 0; i < showerDates.length; i++) {
+
+        var diffInSeconds = Math.abs(showerDates[i] - d) / 1000;
+        var days = Math.floor(diffInSeconds / 60 / 60 / 24);
+        var hours = Math.floor(diffInSeconds / 60 / 60 % 24);
+        var minutes = Math.floor(diffInSeconds / 60 % 60);
+        var showerContainer = $("<p>");
+        showerContainer.addClass("shower-info text-center");
+        showerContainer.append(showerNames[i] + ": " + days + ' days, ' + hours + ' hours, ' + minutes + ' minutes ');
+        $("#meteorShowers").append(showerContainer);
+    }
+}
 
 //Function to display NASA's Astronomy Picture of the Day
 function displayPicOfDay() {
@@ -608,7 +627,8 @@ $(document).ready(function () {
     //Display the planetary visibility
     visiblePlanets.displayVisibility();
 
-    // Display the launch countdown
+    //Display Meteor Shower countdown information
+    displayMeteorShowerInfo();
 
     //Display NASA's astronomy picture of the day
     displayPicOfDay();

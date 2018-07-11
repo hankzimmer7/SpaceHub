@@ -1,18 +1,26 @@
 body {
     background-image: url("../images/galaxy-background.jpg");
 }
+
 h1 {
     font-size: 3.5rem;
     font-weight: 300;
     line-height: 1.2;
 }
+
 h1,
 p {
     color: rgb(50, 60, 60);
 }
+
 p {
     margin-bottom: 0;
 }
+
+h2 {
+    margin-top: 1rem;
+}
+
 form {
     margin-bottom: 1rem;
 }
@@ -26,15 +34,12 @@ form {
     padding: 2.5rem 2rem;
 }
 
-.slideshow-container {
-    margin-bottom: 1rem;
-}
-
 .space-slide {
     display: none;
 }
 
-.launch-info {
+.launch-info,
+.shower-info {
     font-size: 2rem;
     font-weight: 400;
 }
@@ -42,9 +47,11 @@ form {
 /* --------Responsive Styling------------------------------------------- */
 
 /* Large devices (desktops, less than 1200px) */
+
 @media screen and (max-width: 1199.98px) {}
 
 /* Medium devices (tablets, less than 992px) */
+
 @media screen and (max-width: 991.98px) {
     h1 {
         font-size: 3rem;
@@ -52,12 +59,14 @@ form {
     h2 {
         font-size: 1.8rem;
     }
-    .launch-info {
+    .launch-info,
+    .shower-info {
         font-size: 1.5rem;
     }
 }
 
 /* Small devices (landscape phones, less than 768px) */
+
 @media screen and (max-width: 767.98px) {
     h1 {
         font-size: 2.5rem;
@@ -65,12 +74,14 @@ form {
     h2 {
         font-size: 1.2rem;
     }
-    .launch-info {
+    .launch-info,
+    .shower-info {
         font-size: 1.2rem;
     }
 }
 
 /* Extra small devices (portrait phones, less than 576px) */
+
 @media screen and (max-width: 575.98px) {
     h1 {
         font-size: 2rem;
@@ -78,7 +89,8 @@ form {
     h2 {
         font-size: 1rem;
     }
-    .launch-info {
+    .launch-info,
+    .shower-info {
         font-size: 1rem;
     }
     .jumbotron {
@@ -87,6 +99,7 @@ form {
 }
 
 /* Tiny devices */
+
 @media screen and (max-width: 420px) {
     h1 {
         font-size: 1.2rem;
@@ -94,7 +107,8 @@ form {
     h2 {
         font-size: 0.75rem;
     }
-    .launch-info {
+    .launch-info,
+    .shower-info {
         font-size: 0.75rem;
     }
     p,
